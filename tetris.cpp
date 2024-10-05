@@ -4,6 +4,18 @@ using namespace std;
 
 wstring tetromino[7];
 
+int rotate(int px, int py, int r)
+{
+    switch(r % 4)
+    {
+        case 0: return py*4+px; //for 0*
+        case 1: return 12+py-(px+4); //for 90*
+        case 2: return 15-(px*4)-px; // for 180*
+        case 3: return 3-py+(px*4); //for 270* 
+    }
+
+}
+
 int main(){
 
     //create assets
