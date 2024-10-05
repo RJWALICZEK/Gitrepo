@@ -2,6 +2,8 @@
 
 using namespace std;
 
+// wstring
+
 wstring tetromino[7];
 
 int rotate(int px, int py, int r)
