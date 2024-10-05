@@ -7,6 +7,10 @@ using namespace std;
 
 wstring tetromino[7];
 
+int nFieldWidth = 12;
+int nFieldHeight = 18; 
+unsigned char *pField = nullptr;
+
 int rotate(int px, int py, int r)
 {
     switch(r % 4)
@@ -56,6 +60,14 @@ int main(){
     tetromino[6].append(L".x..");
     tetromino[6].append(L".x..");
 
+    pField = new unsigned char[nFieldWidth*nFieldHeight]; 
+    for (int x = 0; x < nFieldWidth ; x++)
+    {
+        for(int y = 0; y < nFieldHeight; y++)
+        {
+            pField[y*nFieldWidth+x] = (x == 0 || x == nFieldWidth - 1 || y == nFieldHeight - 1) ? 9 : 0;
+        }
+    }
     system ("pause");
     return 0;
 }
