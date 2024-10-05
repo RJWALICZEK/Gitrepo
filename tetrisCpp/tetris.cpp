@@ -2,7 +2,8 @@
 
 using namespace std;
 
-// wstring
+// wstr
+// wstr
 
 wstring tetromino[7];
 
@@ -15,7 +16,6 @@ int rotate(int px, int py, int r)
         case 2: return 15-(px*4)-px; // for 180*
         case 3: return 3-py+(px*4); //for 270* 
     }
-
 }
 
 int main(){
