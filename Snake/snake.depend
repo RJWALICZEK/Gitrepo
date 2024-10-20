@@ -1,0 +1,21 @@
+# depslib dependency file v1.0
+1729386729 source:d:\gitrepo\snake\main.cpp
+	<iostream>
+	<cstdlib>
+	<conio.h>
+	"game.h"
+
+1729387543 d:\gitrepo\snake\include\game.h
+	<conio.h>
+	<iostream>
+
+1729387247 source:d:\gitrepo\snake\src\menu.cpp
+	"game.h"
+	<conio.h>
+	<iostream>
+
+1729386354 source:d:\gitrepo\snake\src\game.cpp
+	"game.h"
+	<conio.h>
+	<iostream>
+
