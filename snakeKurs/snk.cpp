@@ -17,7 +17,7 @@ void sredni();
 void trudny();
 void zwolnijPamiec(int **&tab, int szer);
 
-void pole(int **&tab,int szer,int wys);
+void pole(int **&tab,int szer,int wys, string prz);
 
 
 int main()
@@ -123,39 +123,87 @@ int menu2(int m)
 void latwy()
 {
     int **stol = nullptr;
-    szerokosc = 15;
-    wysokosc = 15;
-    szybkosc= 10;
+    string przerwa = "                                  ";
+    szerokosc = 18;
+    wysokosc = 18;
+    szybkosc= 3;
+
     
     do
     {
-        pole(stol,szerokosc,wysokosc);
+
+        pole(stol, szerokosc, wysokosc, przerwa);
 
 
     }while(wybor=='q');
-    
+
+    zwolnijPamiec(stol,szerokosc);
+
 }
 void sredni()
 {
-     cout << "sredni  ";
-    system("pause");
+    int **stol = nullptr;
+    string przerwa = "                            ";
+    szerokosc = 15;
+    wysokosc = 15;
+    szybkosc= 6;
+    do
+    {
+        pole(stol,szerokosc,wysokosc,przerwa);
+
+    } while (wybor=='q');
+
+    zwolnijPamiec(stol,szerokosc);
+    
 }
 void trudny()
 {
-     cout << "trudny  ";
-    system("pause");
+    int **stol = nullptr;
+    string przerwa = "                  ";
+    szerokosc = 10;
+    wysokosc = 10;
+    szybkosc = 9;
+    do
+    {
+        pole(stol, szerokosc, wysokosc, przerwa);
+
+    } while (wybor=='q');
+
+    zwolnijPamiec(stol, szerokosc);
+     
 }
 
-void pole(int **&tab,int szer,int wys)
+void pole(int **&tab,int szer,int wys,string prz)
 {
+    system("cls");
     tab=new int*[szer];
     for (int i=0; i<szer; i++)
     {
         tab[i]=new int[wys];
     }
 
+    for(int i=0; i<szerokosc; i++)
+    {
+        cout << "--";
+        if(i==szerokosc-1)
+        {
+            cout << endl;
+            for(int j=0; j<wysokosc; j++)
+            {
+                cout << "|" << prz << "|" <<endl;
+                if(j==wysokosc-1)
+                {
+                    for (int k=0; k<szerokosc; k++)
+                    {
+                        cout << "--";
+                    }
+                }
+            }
+        }
+    }
 
-    zwolnijPamiec(tab,szer);
+    cout << endl;
+    system("pause");
 }
 
 void zwolnijPamiec(int **&tab, int szer)
