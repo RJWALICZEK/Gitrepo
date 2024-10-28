@@ -1,23 +1,30 @@
+/****************************************
+ *********RAFAL*WALICZEK*****************
+ ************SNAKE V2********************
+ ****************************************/
+
 #include <iostream>
 #include <conio.h>
 #include <cstdlib>
-#include <fstream>
+#include <vector>
 
 using namespace std;
 
+//ZMIENNE GLOBALNE
+//dla menu
 char wybor;
-
+//dla pola do gry
 int szerokosc, wysokosc, szybkosc;
+//dla sterowania
 
-
+//DEKLARACJA FUNKCJI
 int menu1(int m);
 int menu2(int m);
 void latwy();
 void sredni();
 void trudny();
-void zwolnijPamiec(int **&tab, int szer);
-
-void pole(int **&tab,int szer,int wys, string prz);
+void zwolnijPamiec(char **&tab, int szer);
+void pole(char **&tab,int szer,int wys, string prz);
 
 
 int main()
@@ -74,7 +81,7 @@ int main()
 
     return 0;
 }
-
+//GLOWNE MENU GRY
 int menu1(int m)
 {
      do
@@ -96,7 +103,7 @@ int menu1(int m)
         } while (wybor!=13);
         return m;
 }
-
+//MENU WYBORU POZIOMU TRUDNOSCI
 int menu2(int m)
 {
     do
@@ -119,10 +126,10 @@ int menu2(int m)
     } while (wybor!=13);
     return m;
 }
-
+//POZIOM LATWY
 void latwy()
 {
-    int **stol = nullptr;
+    char **stol = nullptr;
     string przerwa = "                                  ";
     szerokosc = 18;
     wysokosc = 18;
@@ -140,9 +147,10 @@ void latwy()
     zwolnijPamiec(stol,szerokosc);
 
 }
+//POZIOM SREDNI
 void sredni()
 {
-    int **stol = nullptr;
+    char **stol = nullptr;
     string przerwa = "                            ";
     szerokosc = 15;
     wysokosc = 15;
@@ -156,9 +164,10 @@ void sredni()
     zwolnijPamiec(stol,szerokosc);
     
 }
+//POZIOM TRUDNY
 void trudny()
 {
-    int **stol = nullptr;
+    char **stol = nullptr;
     string przerwa = "                  ";
     szerokosc = 10;
     wysokosc = 10;
@@ -172,16 +181,37 @@ void trudny()
     zwolnijPamiec(stol, szerokosc);
      
 }
-
-void pole(int **&tab,int szer,int wys,string prz)
+//FUNKCJA TWORZACA POLE DO GRY
+void pole(char **&tab,int szer,int wys,string prz)
 {
     system("cls");
-    tab=new int*[szer];
-    for (int i=0; i<szer; i++)
+    //DEKLARACJA TABLICY
+    tab=new char*[szer];
+     
+     for (int i=0; i<szer; i++)
     {
-        tab[i]=new int[wys];
+        tab[i]=new char[wys];
     }
 
+     //DEKLARACJA WSP WEZA
+    vector<int> xyWaz;
+
+     //LOSOWANIE WSP WAZA
+    xyWaz.push_back(rand()%(szer-1));
+    xyWaz.push_back(rand()%(wys-1));
+
+   //ZAPELNIANIE TABLICY "p" = PUSTE POLE
+    for(int i=0; i<szer; i++)
+    {
+        for(int j=0; j<wys; j++)
+        {
+            tab[i][j] = 'p';
+        }
+    }
+    //USTALANIE POZYCJI WEZA
+       tab[xyWaz[0]][xyWaz[1]]='w';
+
+    //RYSOWANIE RAMKI POLA GRY
     for(int i=0; i<szerokosc; i++)
     {
         cout << "--";
@@ -205,9 +235,9 @@ void pole(int **&tab,int szer,int wys,string prz)
     cout << endl;
     system("pause");
 }
-
-void zwolnijPamiec(int **&tab, int szer)
-{
+ //ZWALNIANIE PAMIECI ZAREZERWOWANEJ DLA TABLICY
+void zwolnijPamiec(char **&tab, int szer)
+{  
     for(int i=0; i<szer; i++)
     {
         delete [] tab[i];
