@@ -6,16 +6,35 @@ using namespace std;
 
 int main()
 {
-    srand(time(NULL));
-    int wysokosc = 10;
+    
+    string przerwa = "                  ";
     int szerokosc = 10;
-    vector <int> xy;
+    int wysokosc = 10;
+    int szybkosc = 9;
+    int tab[szerokosc][wysokosc];
 
-    xy.push_back(rand()%wysokosc);
-    xy.push_back(rand()%szerokosc);
+                for(int i=0; i<szerokosc; i++)
+                {       tab[i][wysokosc]=i;
+                    
+                        for(int j=0; j<wysokosc; j++)
+                        {
+                            //tab[szerokosc][j] = j;
+                        }
+                }
 
 
-    cout << "x " << xy[0] << "   y " << xy[1] << endl;
+
+                for(int i=0; i<szerokosc; i++)
+                {
+                  
+                    for(int j=0; j<wysokosc; j++)
+                    {
+                       cout << tab[i][j] ;
+                    }
+                    cout << endl;
+                }
+
+
     system("pause");
     return 0;
 }

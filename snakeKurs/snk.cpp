@@ -304,11 +304,11 @@ void pole(char **&tab,int szer,int wys,int szyb, string prz)
                 }
                 cout << endl;
                 wybor=getch();
-                if(wybor==72)
+                if(wybor==72 && xyWaz[1] < wys+1)
                 {
                     gora(xyWaz);
                 }
-                 if(wybor==80)
+                 if(wybor==80 && xyWaz[1] > wys-1)
                 {
                     dol(xyWaz);
                 }
@@ -319,6 +319,21 @@ void pole(char **&tab,int szer,int wys,int szyb, string prz)
                  if(wybor==75)
                 {
                     lewo(xyWaz);
+                }
+                if(xyWaz[0]==xyPunkt[0] && xyWaz[1]==xyPunkt[1])
+                {
+                    tab[xyPunkt[0]][xyPunkt[1]]='p';
+                        //LOSOWANIE WSP PUNKTU
+                        do
+                        {
+                            xyPunkt.push_back(rand()%(szer-1));
+                            xyPunkt.push_back(rand()%(wys-1));
+                    
+                        } while (tab[xyPunkt[0]][xyPunkt[1]]!='p');
+
+                        //USTALANIE POZYCJI PUNKTU
+
+                        tab[xyPunkt[0]][xyPunkt[1]]='x';    
                 }
 
                 
