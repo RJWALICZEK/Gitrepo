@@ -20,6 +20,7 @@ int szerokosc, wysokosc, szybkosc;
 //DEKLARACJA FUNKCJI
 int menu1(int m);
 int menu2(int m);
+void rekordy();
 void latwy();
 void sredni();
 void trudny();
@@ -29,49 +30,52 @@ void pole(char **&tab,int szer,int wys, string prz);
 
 int main()
 {
-    int menu;
+    const int menu = 1;
+    srand(time(NULL));
 
     while(true)
     {
-         menu=1;
-
-       
 
         switch(menu1(menu))
             {
                 case 1:
                 {
-                    menu2(menu);
-                    break;
+                    switch(menu2(menu))
+                        {
+                            case 1:
+                            {
+                                latwy();
+                                break;
+                            }
+                            case 2:
+                            {
+                                sredni();
+                                break;
+                            }
+                            case 3:
+                            {
+                                trudny();
+                                break;
+                            }
+                            case 4:
+                            {
+                            break;
+                            }
+                        } 
+                                break;
                 }
                 case 2:
+                {
+                    rekordy();
+                    continue;
+                }
+                case 3:
                 {
                     exit(0);
                 }
             } 
 
-        switch(menu2(menu))
-            {
-                case 1:
-                {
-                    latwy();
-                    break;
-                }
-                case 2:
-                {
-                    sredni();
-                    break;
-                }
-                case 3:
-                {
-                    trudny();
-                    break;
-                }
-                case 4:
-                {
-                   break;
-                }
-            } 
+        
        
       
 
@@ -87,15 +91,16 @@ int menu1(int m)
      do
         {
             system("cls");
-           cout << "\t\tSNAKE\n\n";
-           cout << (m == 1 ? "->" : "  ") << "Graj" << endl;
-           cout << (m == 2 ? "->" : "  ") << "wyjdz" << endl;
+           cout << "************SNAKE************\n\n";
+           cout << (m == 1 ? "  \t->GRAJ" : "\t    Graj") << endl;
+           cout << (m == 2 ? "  \t->REKORDY" : "\t    Rekordy") << endl << endl;
+           cout << (m == 3 ? "  \t->WYJSCIE" : "\t    Wyjscie") << endl;
             wybor=getch();
             if(wybor==72 && m>1)
             {
                 m--;
             }   
-            if(wybor==80 && m<2)
+            if(wybor==80 && m<3)
             {
                 m++;
             }     
@@ -109,11 +114,11 @@ int menu2(int m)
     do
     {
      system("cls");
-           cout << "\t\tSNAKE\n\n";
-           cout << (m == 1 ? "->" : "  ") << "Latwy" << endl;
-           cout << (m == 2 ? "->" : "  ") << "Sredni" << endl;
-           cout << (m == 3 ? "->" : "  ") << "Trudny" << endl;
-           cout << (m == 4 ? "->" : "  ") << "Powrot" << endl;
+           cout << "************SNAKE************\n\n";
+           cout << (m == 1 ? "  \t->LATWY" : "\t    Latwy") << endl;
+           cout << (m == 2 ? "  \t->SREDNI" : "\t    Sredni") << endl;
+           cout << (m == 3 ? "  \t->TRUDNY" : "\t    Trudny") << endl << endl;
+           cout << (m == 4 ? "  \t->POWROT" : "\t    Powrot") << endl;
             wybor=getch();
             if(wybor==72 && m>1)
             {
@@ -125,6 +130,27 @@ int menu2(int m)
             }     
     } while (wybor!=13);
     return m;
+}
+//LISTA REKORDOW WCZYTYWANA Z PLIKU
+void rekordy()
+{   
+    //MENU TESTOWE
+    system("cls");
+    cout << "************REKORDY************\n" << endl; 
+    cout << "\t 1 - " << " AAA " << " -" <<endl;
+    cout << "\t 2 - " << " BBB " << " -" <<endl;
+    cout << "\t 3 - " << " CCC " << " -" <<endl;
+    cout << "\t 4 - " << " DDD " << " -" <<endl;
+    cout << "\t 5 - " << " EEE " << " -" <<endl;
+    cout << "\t 6 - " << " FFF " << " -" <<endl;
+    cout << "\t 7 - " << " GGG " << " -" <<endl;
+    cout << "\t 8 - " << " HHH " << " -" <<endl;
+    cout << "\t 9 - " << " III " << " -" <<endl;
+    cout << "\t10 - " << " JJJ " << " -" <<endl;
+    cout << "\t11 - " << " KKK " << " -" <<endl;
+    cout << "\t12 - " << " LLL " << " -" <<endl;
+    cout << endl;
+    system("pause");
 }
 //POZIOM LATWY
 void latwy()
@@ -185,6 +211,11 @@ void trudny()
 void pole(char **&tab,int szer,int wys,string prz)
 {
     system("cls");
+     //DEKLARACJA WSP WEZA
+    vector<int> xyWaz;
+    //DEKLARACJA WSP PUNKT
+    vector<int>xyPunkt;
+
     //DEKLARACJA TABLICY
     tab=new char*[szer];
      
@@ -192,13 +223,6 @@ void pole(char **&tab,int szer,int wys,string prz)
     {
         tab[i]=new char[wys];
     }
-
-     //DEKLARACJA WSP WEZA
-    vector<int> xyWaz;
-
-     //LOSOWANIE WSP WAZA
-    xyWaz.push_back(rand()%(szer-1));
-    xyWaz.push_back(rand()%(wys-1));
 
    //ZAPELNIANIE TABLICY "p" = PUSTE POLE
     for(int i=0; i<szer; i++)
@@ -208,8 +232,26 @@ void pole(char **&tab,int szer,int wys,string prz)
             tab[i][j] = 'p';
         }
     }
+     //LOSOWANIE WSP WAZA
+     xyWaz.push_back(rand()%(szer-1));
+     xyWaz.push_back(rand()%(wys-1));
+    
+
     //USTALANIE POZYCJI WEZA
        tab[xyWaz[0]][xyWaz[1]]='w';
+
+    //LOSOWANIE WSP PUNKTU
+    do
+    {
+        xyPunkt.push_back(rand()%(szer-1));
+        xyPunkt.push_back(rand()%(wys-1));
+   
+    } while (tab[xyPunkt[0]][xyPunkt[1]]!='p');
+
+    //USTALANIE POZYCJI PUNKTU
+
+    tab[xyPunkt[0]][xyPunkt[1]]='x';    
+    
 
     //RYSOWANIE RAMKI POLA GRY
     for(int i=0; i<szerokosc; i++)
@@ -220,7 +262,23 @@ void pole(char **&tab,int szer,int wys,string prz)
             cout << endl;
             for(int j=0; j<wysokosc; j++)
             {
-                cout << "|" << prz << "|" <<endl;
+                cout << "|" ;
+                for (int l=0; l<szer-1; l++)
+                {
+                    if(tab[l][j]=='p')
+                    {
+                        cout << "  ";
+                    }
+                    if(tab[l][j]=='w')
+                    {
+                        cout<<"w"<< " ";
+                    }
+                    if(tab[l][j]=='x')
+                    {
+                        cout << "x" << " ";
+                    }
+                }
+                cout << "|" <<endl;
                 if(j==wysokosc-1)
                 {
                     for (int k=0; k<szerokosc; k++)
@@ -231,7 +289,7 @@ void pole(char **&tab,int szer,int wys,string prz)
             }
         }
     }
-
+    
     cout << endl;
     system("pause");
 }
