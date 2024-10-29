@@ -18,6 +18,14 @@ char wybor;
 int szerokosc, wysokosc, szybkosc;
 //dla sterowania
 
+//pozycja weza
+struct Pozycja
+{
+    int x;
+    int y;
+
+};
+
 //DEKLARACJA FUNKCJI
 int menu1(int m);
 int menu2(int m);
@@ -26,12 +34,12 @@ void latwy();
 void sredni();
 void trudny();
 void zwolnijPamiec(char **&tab, int szer);
-void pole(char **&tab,int szer,int wys, int szyb, string prz);
+void pole(char **&tab,int szer,int wys, int szyb);
 
-void gora(vector <int> &gora);
-void dol(vector <int> &dol);
-void prawo(vector <int> &prawo);
-void lewo(vector <int> &lewo);
+void gora(Pozycja &p);
+void dol(Pozycja &p);
+void prawo(Pozycja &p);
+void lewo(Pozycja &p);
 
 
 int main()
@@ -162,19 +170,12 @@ void rekordy()
 void latwy()
 {
     char **stol = nullptr;
-    string przerwa = "                                  ";
+
     szerokosc = 18;
     wysokosc = 18;
     szybkosc= 3;
 
-    
-    do
-    {
-
-        pole(stol, szerokosc, wysokosc, szybkosc, przerwa);
-
-
-    }while(wybor=='q');
+        pole(stol, szerokosc, wysokosc, szybkosc);
 
     zwolnijPamiec(stol,szerokosc);
 
@@ -183,15 +184,13 @@ void latwy()
 void sredni()
 {
     char **stol = nullptr;
-    string przerwa = "                            ";
+
     szerokosc = 15;
     wysokosc = 15;
     szybkosc= 6;
-    do
-    {
-        pole(stol,szerokosc, szybkosc, wysokosc,przerwa);
+    
+        pole(stol,szerokosc, szybkosc, wysokosc);
 
-    } while (wybor=='q');
 
     zwolnijPamiec(stol,szerokosc);
     
@@ -200,28 +199,31 @@ void sredni()
 void trudny()
 {
     char **stol = nullptr;
-    string przerwa = "                  ";
+    
     szerokosc = 10;
     wysokosc = 10;
     szybkosc = 9;
-    do
-    {
-        pole(stol, szerokosc, wysokosc, szybkosc, przerwa);
 
-    } while (wybor=='q');
+        pole(stol, szerokosc, wysokosc, szybkosc);
+
+
 
     zwolnijPamiec(stol, szerokosc);
      
 }
 //FUNKCJA TWORZACA POLE DO GRY
-void pole(char **&tab,int szer,int wys,int szyb, string prz)
+void pole(char **&tab,int szer,int wys,int szyb)
 {
     system("cls");
-     //DEKLARACJA WSP WEZA
-    vector<int> xyWaz;
+    
+     //DEKLARACJA I LOSOWANIE WSP WEZA
+    Pozycja waz;
+    waz.x = rand()%(szerokosc-1);
+    waz.y = rand()%(wysokosc-1);
+    
     //DEKLARACJA WSP PUNKT
-    vector<int>xyPunkt;
-
+    Pozycja punkt;
+    
     //DEKLARACJA TABLICY
     tab=new char*[szer];
      
@@ -229,117 +231,117 @@ void pole(char **&tab,int szer,int wys,int szyb, string prz)
     {
         tab[i]=new char[wys];
     }
-     //LOSOWANIE WSP WAZA
-     xyWaz.push_back(rand()%(szer-1));
-     xyWaz.push_back(rand()%(wys-1));
+
 //////////////////////////////////////////////////////////////////////////
 /////////--------------------------POLE----------------------------------
-          do
+    do
+        {
+                        system("cls");
 
-            {
-                system("cls");
-
-                //ZAPELNIANIE TABLICY "p" = PUSTE POLE
-                for(int i=0; i<szer; i++)
-                {
-                    for(int j=0; j<wys; j++)
-                    {
-                        tab[i][j] = 'p';
-                    }
-                }
-                
-
-                //USTALANIE POZYCJI WEZA
-                tab[xyWaz[0]][xyWaz[1]]='w';
-
-                //LOSOWANIE WSP PUNKTU
-                do
-                {
-                    xyPunkt.push_back(rand()%(szer-1));
-                    xyPunkt.push_back(rand()%(wys-1));
-            
-                } while (tab[xyPunkt[0]][xyPunkt[1]]!='p');
-
-                //USTALANIE POZYCJI PUNKTU
-
-                tab[xyPunkt[0]][xyPunkt[1]]='x';    
-                
-
-                //RYSOWANIE RAMKI POLA GRY
-                for(int i=0; i<szerokosc; i++)
-                {
-                    cout << "--";
-                    if(i==szerokosc-1)
-                    {
-                        cout << endl;
-                        for(int j=0; j<wysokosc; j++)
+                        //ZAPELNIANIE TABLICY "p" = PUSTE POLE
+                        for(int i=0; i<szer; i++)
                         {
-                            cout << "|" ;
-
-                            for (int l=0; l<szer-1; l++)
+                            for(int j=0; j<wys; j++)
                             {
-                                if(tab[l][j]=='p')
-                                {
-                                    cout << "  ";
-                                }
-                                if(tab[l][j]=='w')
-                                {
-                                    cout<<"w"<< " ";
-                                }
-                                if(tab[l][j]=='x')
-                                {
-                                    cout << "x" << " ";
-                                }
-                            }
-                            
-                            cout << "|" <<endl;
-                            if(j==wysokosc-1)
-                            {
-                                for (int k=0; k<szerokosc; k++)
-                                {
-                                    cout << "--";
-                                }
+                                tab[i][j] = 'p';
                             }
                         }
-                    }
-                }
-                cout << endl;
-                wybor=getch();
-                if(wybor==72 && xyWaz[1] < wys+1)
-                {
-                    gora(xyWaz);
-                }
-                 if(wybor==80 && xyWaz[1] > wys-1)
-                {
-                    dol(xyWaz);
-                }
-                 if(wybor==77)
-                {
-                    prawo(xyWaz);
-                }
-                 if(wybor==75)
-                {
-                    lewo(xyWaz);
-                }
-                if(xyWaz[0]==xyPunkt[0] && xyWaz[1]==xyPunkt[1])
-                {
-                    tab[xyPunkt[0]][xyPunkt[1]]='p';
+                        
+
+                        //USTALANIE POZYCJI WEZA
+                        tab[waz.x][waz.y]='w';
+
                         //LOSOWANIE WSP PUNKTU
                         do
                         {
-                            xyPunkt.push_back(rand()%(szer-1));
-                            xyPunkt.push_back(rand()%(wys-1));
+                            punkt.x = rand()%(szerokosc-1);
+                            punkt.y = rand()%(wysokosc-1);
                     
-                        } while (tab[xyPunkt[0]][xyPunkt[1]]!='p');
+                        } while (tab[punkt.x][punkt.y]!='p');
 
                         //USTALANIE POZYCJI PUNKTU
 
-                        tab[xyPunkt[0]][xyPunkt[1]]='x';    
-                }
+                        tab[punkt.x][punkt.y]='x';    
+                        
 
-                
-        Sleep(szyb);
-   }while(wybor!=13);
+                        //RYSOWANIE RAMKI POLA GRY
+                        for(int i=0; i<szerokosc; i++)
+                        {
+                            cout << "--";
+                            if(i==szerokosc-1)
+                            {
+                                cout << endl;
+                                for(int j=0; j<wysokosc; j++)
+                                {
+                                    cout << "|" ;
+
+                                    for (int l=0; l<szer-1; l++)
+                                    {
+                                        if(tab[l][j]=='p')
+                                        {
+                                            cout << "  ";
+                                        }
+                                        if(tab[l][j]=='w')
+                                        {
+                                            cout<<"w"<< " ";
+                                        }
+                                        if(tab[l][j]=='x')
+                                        {
+                                            cout << "x" << " ";
+                                        }
+                                    }
+                                    
+                                    cout << "|" <<endl;
+                                    if(j==wysokosc-1)
+                                    {
+                                        for (int k=0; k<szerokosc; k++)
+                                        {
+                                            cout << "--";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        cout << endl;
+                        wybor=getch();
+                        if(wybor==72)
+                        {
+                            gora(waz);
+                        }
+                        else if(wybor==80)
+                        {
+                            dol(waz);
+                        }
+                        else if(wybor==77)
+                        {
+                            prawo(waz);
+                        }
+                        else if(wybor==75)
+                        {
+                            lewo(waz);
+                        }
+                        if(waz.x==punkt.x && waz.y==punkt.y)
+                        {
+                            tab[punkt.x][punkt.y]='p';
+                            
+                                //LOSOWANIE WSP PUNKTU
+                                do
+                                {
+                                    punkt.x = (rand()%(szer-1));
+                                    punkt.y = (rand()%(wys-1));
+                            
+                                } while (tab[punkt.x][punkt.y]!='p');
+
+                                //USTALANIE POZYCJI PUNKTU
+
+                                tab[punkt.x][punkt.y]='x';    
+                        }
+                        
+
+                 
+                Sleep(szyb);
+
+        }while(wybor!='q');
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
     cout << endl;
@@ -355,19 +357,22 @@ void zwolnijPamiec(char **&tab, int szer)
     delete [] tab;
 }
 
-void gora(vector<int> &gora)
+void gora(Pozycja &p)
 {
-    gora[1]--;
+    p.y--;
+
 }
-void dol(vector<int> &dol)
+void dol(Pozycja &p)
 {
-    dol[1]++;
+   p.y++;
 }
-void prawo(vector<int> &prawo)
+void prawo(Pozycja &p)
 {
-    prawo[0]++;
+    p.x++;
 }
-void lewo(vector<int> &lewo)
+void lewo(Pozycja &p)
 {
-    lewo[0]--;
+    p.x--;
 }
+
+
