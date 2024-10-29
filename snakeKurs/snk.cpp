@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <cstdlib>
 #include <vector>
+#include <windows.h>
 
 using namespace std;
 
@@ -25,7 +26,12 @@ void latwy();
 void sredni();
 void trudny();
 void zwolnijPamiec(char **&tab, int szer);
-void pole(char **&tab,int szer,int wys, string prz);
+void pole(char **&tab,int szer,int wys, int szyb, string prz);
+
+void gora(vector <int> &gora);
+void dol(vector <int> &dol);
+void prawo(vector <int> &prawo);
+void lewo(vector <int> &lewo);
 
 
 int main()
@@ -165,7 +171,7 @@ void latwy()
     do
     {
 
-        pole(stol, szerokosc, wysokosc, przerwa);
+        pole(stol, szerokosc, wysokosc, szybkosc, przerwa);
 
 
     }while(wybor=='q');
@@ -183,7 +189,7 @@ void sredni()
     szybkosc= 6;
     do
     {
-        pole(stol,szerokosc,wysokosc,przerwa);
+        pole(stol,szerokosc, szybkosc, wysokosc,przerwa);
 
     } while (wybor=='q');
 
@@ -200,7 +206,7 @@ void trudny()
     szybkosc = 9;
     do
     {
-        pole(stol, szerokosc, wysokosc, przerwa);
+        pole(stol, szerokosc, wysokosc, szybkosc, przerwa);
 
     } while (wybor=='q');
 
@@ -208,7 +214,7 @@ void trudny()
      
 }
 //FUNKCJA TWORZACA POLE DO GRY
-void pole(char **&tab,int szer,int wys,string prz)
+void pole(char **&tab,int szer,int wys,int szyb, string prz)
 {
     system("cls");
      //DEKLARACJA WSP WEZA
@@ -223,73 +229,103 @@ void pole(char **&tab,int szer,int wys,string prz)
     {
         tab[i]=new char[wys];
     }
-
-   //ZAPELNIANIE TABLICY "p" = PUSTE POLE
-    for(int i=0; i<szer; i++)
-    {
-        for(int j=0; j<wys; j++)
-        {
-            tab[i][j] = 'p';
-        }
-    }
      //LOSOWANIE WSP WAZA
      xyWaz.push_back(rand()%(szer-1));
      xyWaz.push_back(rand()%(wys-1));
-    
-
-    //USTALANIE POZYCJI WEZA
-       tab[xyWaz[0]][xyWaz[1]]='w';
-
-    //LOSOWANIE WSP PUNKTU
-    do
-    {
-        xyPunkt.push_back(rand()%(szer-1));
-        xyPunkt.push_back(rand()%(wys-1));
-   
-    } while (tab[xyPunkt[0]][xyPunkt[1]]!='p');
-
-    //USTALANIE POZYCJI PUNKTU
-
-    tab[xyPunkt[0]][xyPunkt[1]]='x';    
-    
-
-    //RYSOWANIE RAMKI POLA GRY
-    for(int i=0; i<szerokosc; i++)
-    {
-        cout << "--";
-        if(i==szerokosc-1)
-        {
-            cout << endl;
-            for(int j=0; j<wysokosc; j++)
+//////////////////////////////////////////////////////////////////////////
+/////////--------------------------POLE----------------------------------
+   for(;;)
             {
-                cout << "|" ;
-                for (int l=0; l<szer-1; l++)
+                system("cls");
+
+                //ZAPELNIANIE TABLICY "p" = PUSTE POLE
+                for(int i=0; i<szer; i++)
                 {
-                    if(tab[l][j]=='p')
+                    for(int j=0; j<wys; j++)
                     {
-                        cout << "  ";
-                    }
-                    if(tab[l][j]=='w')
-                    {
-                        cout<<"w"<< " ";
-                    }
-                    if(tab[l][j]=='x')
-                    {
-                        cout << "x" << " ";
+                        tab[i][j] = 'p';
                     }
                 }
-                cout << "|" <<endl;
-                if(j==wysokosc-1)
+                
+
+                //USTALANIE POZYCJI WEZA
+                tab[xyWaz[0]][xyWaz[1]]='w';
+
+                //LOSOWANIE WSP PUNKTU
+                do
                 {
-                    for (int k=0; k<szerokosc; k++)
+                    xyPunkt.push_back(rand()%(szer-1));
+                    xyPunkt.push_back(rand()%(wys-1));
+            
+                } while (tab[xyPunkt[0]][xyPunkt[1]]!='p');
+
+                //USTALANIE POZYCJI PUNKTU
+
+                tab[xyPunkt[0]][xyPunkt[1]]='x';    
+                
+
+                //RYSOWANIE RAMKI POLA GRY
+                for(int i=0; i<szerokosc; i++)
+                {
+                    cout << "--";
+                    if(i==szerokosc-1)
                     {
-                        cout << "--";
+                        cout << endl;
+                        for(int j=0; j<wysokosc; j++)
+                        {
+                            cout << "|" ;
+
+                            for (int l=0; l<szer-1; l++)
+                            {
+                                if(tab[l][j]=='p')
+                                {
+                                    cout << "  ";
+                                }
+                                if(tab[l][j]=='w')
+                                {
+                                    cout<<"w"<< " ";
+                                }
+                                if(tab[l][j]=='x')
+                                {
+                                    cout << "x" << " ";
+                                }
+                            }
+                            
+                            cout << "|" <<endl;
+                            if(j==wysokosc-1)
+                            {
+                                for (int k=0; k<szerokosc; k++)
+                                {
+                                    cout << "--";
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        }
-    }
-    
+                cout << endl;
+                wybor=getch();
+                if(wybor==72)
+                {
+                    gora(xyWaz);
+                }
+                 if(wybor==80)
+                {
+                    dol(xyWaz);
+                }
+                 if(wybor==77)
+                {
+                    prawo(xyWaz);
+                }
+                 if(wybor==75)
+                {
+                    lewo(xyWaz);
+                }
+
+                
+        Sleep(szyb);
+   }
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
     cout << endl;
     system("pause");
 }
@@ -301,4 +337,21 @@ void zwolnijPamiec(char **&tab, int szer)
         delete [] tab[i];
     }
     delete [] tab;
+}
+
+void gora(vector<int> &gora)
+{
+    gora[1]--;
+}
+void dol(vector<int> &dol)
+{
+    dol[1]++;
+}
+void prawo(vector<int> &prawo)
+{
+    prawo[0]++;
+}
+void lewo(vector<int> &lewo)
+{
+    lewo[0]--;
 }
