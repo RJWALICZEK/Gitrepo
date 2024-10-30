@@ -1,8 +1,3 @@
-/****************************************
- *********RAFAL*WALICZEK*****************
- ************SNAKE V2********************
- ****************************************/
-
 #include <iostream>
 #include <conio.h>
 #include <cstdlib>
@@ -189,7 +184,7 @@ void sredni()
     wysokosc = 15;
     szybkosc= 6;
     
-        pole(stol,szerokosc, szybkosc, wysokosc);
+        pole(stol,szerokosc, wysokosc, szybkosc);
 
 
     zwolnijPamiec(stol,szerokosc);
@@ -215,15 +210,7 @@ void trudny()
 void pole(char **&tab,int szer,int wys,int szyb)
 {
     system("cls");
-    
-     //DEKLARACJA I LOSOWANIE WSP WEZA
-    Pozycja waz;
-    waz.x = rand()%(szerokosc-1);
-    waz.y = rand()%(wysokosc-1);
-    
-    //DEKLARACJA WSP PUNKT
-    Pozycja punkt;
-    
+
     //DEKLARACJA TABLICY
     tab=new char*[szer];
      
@@ -231,6 +218,24 @@ void pole(char **&tab,int szer,int wys,int szyb)
     {
         tab[i]=new char[wys];
     }
+    
+     //DEKLARACJA I LOSOWANIE WSP WEZA
+    Pozycja waz;
+    waz.x = rand()%(szerokosc-1);
+    waz.y = rand()%(wysokosc-1);
+
+   
+    
+    //DEKLARACJA I LOSOWANIE WSP PUNKT
+    Pozycja punkt;
+    do
+    {
+        punkt.x = rand()%(szerokosc-1);
+        punkt.y = rand()%(wysokosc-1);
+                    
+    } while (tab[punkt.x][punkt.y]!=tab[waz.x][waz.y]);
+    
+    
 
 //////////////////////////////////////////////////////////////////////////
 /////////--------------------------POLE----------------------------------
@@ -238,6 +243,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
         {
                         system("cls");
 
+                        
                         //ZAPELNIANIE TABLICY "p" = PUSTE POLE
                         for(int i=0; i<szer; i++)
                         {
@@ -246,18 +252,8 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 tab[i][j] = 'p';
                             }
                         }
-                        
-
-                        //USTALANIE POZYCJI WEZA
-                        tab[waz.x][waz.y]='w';
-
-                        //LOSOWANIE WSP PUNKTU
-                        do
-                        {
-                            punkt.x = rand()%(szerokosc-1);
-                            punkt.y = rand()%(wysokosc-1);
-                    
-                        } while (tab[punkt.x][punkt.y]!='p');
+                         //USTALANIE POZYCJI WEZA
+                         tab[waz.x][waz.y]='w';
 
                         //USTALANIE POZYCJI PUNKTU
 
@@ -374,5 +370,3 @@ void lewo(Pozycja &p)
 {
     p.x--;
 }
-
-
