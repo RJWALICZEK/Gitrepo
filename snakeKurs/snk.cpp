@@ -211,6 +211,9 @@ void pole(char **&tab,int szer,int wys,int szyb)
 {
     system("cls");
 
+    //LICZNIK PUNKTOW
+    int punkty=0;
+
     //DEKLARACJA TABLICY
     tab=new char*[szer];
      
@@ -287,7 +290,13 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                         }
                                     }
                                     
+                                    if(j==2)
+                                    {
+                                        cout << "|      punkty : " << punkty << endl;
+                                    }
+                                    else
                                     cout << "|" <<endl;
+                                    
                                     if(j==wysokosc-1)
                                     {
                                         for (int k=0; k<szerokosc; k++)
@@ -298,7 +307,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 }
                             }
                         }
-                        cout << endl;
+                        cout << "   q : wyjscie     p : pauza" <<endl;
                         wybor=getch();
                         if(wybor==72)
                         {
@@ -316,8 +325,13 @@ void pole(char **&tab,int szer,int wys,int szyb)
                         {
                             lewo(waz);
                         }
+                        if(wybor=='p')
+                        {
+                            system("pause");
+                        }
                         if(waz.x==punkt.x && waz.y==punkt.y)
                         {
+                            punkty++;
                             tab[punkt.x][punkt.y]='p';
                             
                                 //LOSOWANIE WSP PUNKTU
@@ -332,10 +346,22 @@ void pole(char **&tab,int szer,int wys,int szyb)
 
                                 tab[punkt.x][punkt.y]='x';    
                         }
-                        
-
-                 
-                Sleep(szyb);
+                        if(waz.x==szerokosc)
+                        {
+                            waz.x=0;
+                        }
+                        if(waz.x==-1)
+                        {
+                            waz.x=szerokosc-1;
+                        }
+                        if(waz.y==wysokosc)
+                        {
+                            waz.y=0;
+                        }
+                        if(waz.y==-1)
+                        {
+                            waz.y=wysokosc-1;
+                        }
 
         }while(wybor!='q');
 ////////////////////////////////////////////////////////////////////////////////////////////
