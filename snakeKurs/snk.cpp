@@ -166,7 +166,7 @@ void latwy()
 {
     char **stol = nullptr;
 
-    szerokosc = 18;
+    szerokosc = 36;
     wysokosc = 18;
     szybkosc= 3;
 
@@ -180,7 +180,7 @@ void sredni()
 {
     char **stol = nullptr;
 
-    szerokosc = 15;
+    szerokosc = 30;
     wysokosc = 15;
     szybkosc= 6;
     
@@ -195,7 +195,7 @@ void trudny()
 {
     char **stol = nullptr;
     
-    szerokosc = 10;
+    szerokosc = 20;
     wysokosc = 10;
     szybkosc = 9;
 
@@ -255,6 +255,24 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 tab[i][j] = 'p';
                             }
                         }
+
+                        //ustalanie pozycji węża po kolizji ze sciana 
+                        if(waz.x<0)
+                        {
+                            waz.x=szerokosc-2;
+                        }
+                        else if(waz.x>szerokosc-2)
+                        {
+                            waz.x=0;
+                        }
+                        if(waz.y==wysokosc)
+                        {
+                            waz.y=0;
+                        }
+                        else if(waz.y==-1)
+                        {
+                            waz.y=wysokosc-1;
+                        }
                          //USTALANIE POZYCJI WEZA
                          tab[waz.x][waz.y]='w';
 
@@ -266,7 +284,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
                         //RYSOWANIE RAMKI POLA GRY
                         for(int i=0; i<szerokosc; i++)
                         {
-                            cout << "--";
+                            cout << "-";
                             if(i==szerokosc-1)
                             {
                                 cout << endl;
@@ -278,15 +296,15 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                     {
                                         if(tab[l][j]=='p')
                                         {
-                                            cout << "  ";
+                                            cout << " ";
                                         }
                                         if(tab[l][j]=='w')
                                         {
-                                            cout<<"w"<< " ";
+                                            cout<<"w";
                                         }
                                         if(tab[l][j]=='x')
                                         {
-                                            cout << "x" << " ";
+                                            cout << "<";
                                         }
                                     }
                                     
@@ -301,7 +319,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                     {
                                         for (int k=0; k<szerokosc; k++)
                                         {
-                                            cout << "--";
+                                            cout << "-";
                                         }
                                     }
                                 }
@@ -346,22 +364,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
 
                                 tab[punkt.x][punkt.y]='x';    
                         }
-                        if(waz.x==szerokosc)
-                        {
-                            waz.x=0;
-                        }
-                        if(waz.x==-1)
-                        {
-                            waz.x=szerokosc-1;
-                        }
-                        if(waz.y==wysokosc)
-                        {
-                            waz.y=0;
-                        }
-                        if(waz.y==-1)
-                        {
-                            waz.y=wysokosc-1;
-                        }
+                        
 
         }while(wybor!='q');
 ////////////////////////////////////////////////////////////////////////////////////////////
