@@ -182,7 +182,7 @@ void sredni()
 
     szerokosc = 30;
     wysokosc = 15;
-    szybkosc= 6;
+    szybkosc= 2;
     
         pole(stol,szerokosc, wysokosc, szybkosc);
 
@@ -197,7 +197,7 @@ void trudny()
     
     szerokosc = 20;
     wysokosc = 10;
-    szybkosc = 9;
+    szybkosc = 1;
 
         pole(stol, szerokosc, wysokosc, szybkosc);
 
@@ -255,6 +255,34 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 tab[i][j] = 'p';
                             }
                         }
+                        
+                        //sprawdza czy klawisz zostal wcisniety
+                    if(kbhit())
+                    {
+                       wybor=getch();
+                    }
+
+                    //Instrukcje dla wcisnietego klawisza
+                        if(wybor==72)
+                        {
+                            gora(waz);
+                        }
+                        else if(wybor==80)
+                        {
+                            dol(waz);
+                        }
+                        else if(wybor==77)
+                        {
+                            prawo(waz);
+                        }
+                        else if(wybor==75)
+                        {
+                            lewo(waz);
+                        }
+                        if(wybor=='p')
+                        {
+                            system("pause");
+                        }
 
                         //ustalanie pozycji węża po kolizji ze sciana 
                         if(waz.x<0)
@@ -273,7 +301,9 @@ void pole(char **&tab,int szer,int wys,int szyb)
                         {
                             waz.y=wysokosc-1;
                         }
+
                          //USTALANIE POZYCJI WEZA
+
                          tab[waz.x][waz.y]='w';
 
                         //USTALANIE POZYCJI PUNKTU
@@ -281,7 +311,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
                         tab[punkt.x][punkt.y]='x';    
                         
 
-                        //RYSOWANIE RAMKI POLA GRY
+              ////////////////RYSOWANIE RAMKI POLA GRY////////////////
                         for(int i=0; i<szerokosc; i++)
                         {
                             cout << "-";
@@ -304,7 +334,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                         }
                                         if(tab[l][j]=='x')
                                         {
-                                            cout << "<";
+                                            cout << "o";
                                         }
                                     }
                                     
@@ -325,28 +355,13 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 }
                             }
                         }
+                 ////////////////RYSOWANIE RAMKI POLA GRY ////////////////
                         cout << "   q : wyjscie     p : pauza" <<endl;
-                        wybor=getch();
-                        if(wybor==72)
-                        {
-                            gora(waz);
-                        }
-                        else if(wybor==80)
-                        {
-                            dol(waz);
-                        }
-                        else if(wybor==77)
-                        {
-                            prawo(waz);
-                        }
-                        else if(wybor==75)
-                        {
-                            lewo(waz);
-                        }
-                        if(wybor=='p')
-                        {
-                            system("pause");
-                        }
+
+
+                    
+
+                    //kolizja weza z punktem "punkt"
                         if(waz.x==punkt.x && waz.y==punkt.y)
                         {
                             punkty++;
@@ -365,13 +380,14 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 tab[punkt.x][punkt.y]='x';    
                         }
                         
-
+        Sleep(szyb*50);
         }while(wybor!='q');
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
     cout << endl;
     system("pause");
 }
+
  //ZWALNIANIE PAMIECI ZAREZERWOWANEJ DLA TABLICY
 void zwolnijPamiec(char **&tab, int szer)
 {  
@@ -382,6 +398,8 @@ void zwolnijPamiec(char **&tab, int szer)
     delete [] tab;
 }
 
+
+//Instrukcje dla wcisnietego klawisza
 void gora(Pozycja &p)
 {
     p.y--;
