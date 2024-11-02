@@ -13,28 +13,44 @@ char wybor;
 int szerokosc, wysokosc, szybkosc;
 //dla sterowania
 
-//pozycja weza
-struct Pozycja
+//pozycja obiektow
+struct PozycjaWaz
+{
+    //wsp obiektu
+    int x;
+    int y;
+    //historia pozycji obiektu
+    int historiaX[1000];
+    int historiaY[1000];
+    //licznik cykli gry
+    int ile = 0 ;
+    //dlugosc weza
+    int dlugosc = 3;
+};
+struct PozycjaPunkt
 {
     int x;
     int y;
-
 };
 
+
 //DEKLARACJA FUNKCJI
+//menu
 int menu1(int m);
 int menu2(int m);
 void rekordy();
+//poziom trudnosci
 void latwy();
 void sredni();
 void trudny();
+//******
 void zwolnijPamiec(char **&tab, int szer);
 void pole(char **&tab,int szer,int wys, int szyb);
-
-void gora(Pozycja &p);
-void dol(Pozycja &p);
-void prawo(Pozycja &p);
-void lewo(Pozycja &p);
+//sterowanie
+void gora(PozycjaWaz &p);
+void dol(PozycjaWaz &p);
+void prawo(PozycjaWaz &p);
+void lewo(PozycjaWaz &p);
 
 
 int main()
@@ -223,14 +239,16 @@ void pole(char **&tab,int szer,int wys,int szyb)
     }
     
      //DEKLARACJA I LOSOWANIE WSP WEZA
-    Pozycja waz;
-    waz.x = rand()%(szerokosc-1);
-    waz.y = rand()%(wysokosc-1);
+    PozycjaWaz waz;
+    /*waz.x = rand()%(szerokosc-1);
+    waz.y = rand()%(wysokosc-1);*/
 
+    waz.x = 10;
+    waz.y = 10;
    
     
     //DEKLARACJA I LOSOWANIE WSP PUNKT
-    Pozycja punkt;
+    PozycjaPunkt punkt;
     do
     {
         punkt.x = rand()%(szerokosc-1);
@@ -240,14 +258,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
     
     
 
-//////////////////////////////////////////////////////////////////////////
-/////////--------------------------POLE----------------------------------
-    do
-        {
-                        system("cls");
-
-                        
-                        //ZAPELNIANIE TABLICY "p" = PUSTE POLE
+                    //ZAPELNIANIE TABLICY "p" = PUSTE POLE
                         for(int i=0; i<szer; i++)
                         {
                             for(int j=0; j<wys; j++)
@@ -255,6 +266,23 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 tab[i][j] = 'p';
                             }
                         }
+//////////////////////////////////////////////////////////////////////////
+/////////--------------------------GRA PETLA----------------------------------
+    do
+        {
+            
+
+           waz.ile++;
+            waz.historiaX[waz.ile]=waz.x;
+            waz.historiaY[waz.ile]=waz.y;
+            cout << waz.x << endl;
+            cout << waz.y << endl;
+            cout << waz.historiaX[waz.ile]<<endl;
+            cout << waz.historiaY[waz.ile]; 
+                        system("cls");
+
+                        
+
                         
                         //sprawdza czy klawisz zostal wcisniety
                     if(kbhit())
@@ -400,20 +428,20 @@ void zwolnijPamiec(char **&tab, int szer)
 
 
 //Instrukcje dla wcisnietego klawisza
-void gora(Pozycja &p)
+void gora(PozycjaWaz &p)
 {
     p.y--;
 
 }
-void dol(Pozycja &p)
+void dol(PozycjaWaz &p)
 {
    p.y++;
 }
-void prawo(Pozycja &p)
+void prawo(PozycjaWaz &p)
 {
     p.x++;
 }
-void lewo(Pozycja &p)
+void lewo(PozycjaWaz &p)
 {
     p.x--;
 }
