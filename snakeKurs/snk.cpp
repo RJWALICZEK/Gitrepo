@@ -20,8 +20,8 @@ struct PozycjaWaz
     int x;
     int y;
     //historia pozycji obiektu
-    int historiaX[1000];
-    int historiaY[1000];
+    int historiaX[10000];
+    int historiaY[10000];
     //licznik cykli gry
     int ile = 0 ;
     //dlugosc weza
@@ -243,10 +243,6 @@ void pole(char **&tab,int szer,int wys,int szyb)
     waz.x = rand()%(szerokosc-1);
     waz.y = rand()%(wysokosc-1);
 
-  /*  waz.x = 10;
-    waz.y = 10;
-            */   
-    
     //DEKLARACJA I LOSOWANIE WSP PUNKT
     PozycjaPunkt punkt;
     do
@@ -256,8 +252,6 @@ void pole(char **&tab,int szer,int wys,int szyb)
                     
     } while (tab[punkt.x][punkt.y]!=tab[waz.x][waz.y]);
     
-    
-
                     //ZAPELNIANIE TABLICY "p" = PUSTE POLE
                         for(int i=0; i<szer; i++)
                         {
@@ -272,7 +266,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
     for(int i=3; i>0; i--)
     {
         cout << "\n\n\n\n\n\n\t\t" << i ;
-        Sleep(1000);
+        Sleep(700);
         system("cls");
     }
             wybor=rand()%4;
@@ -289,25 +283,17 @@ void pole(char **&tab,int szer,int wys,int szyb)
         {
            
             system("cls");
-           
-        /*    waz.historiaX[waz.ile]=waz.x;
-            waz.historiaY[waz.ile]=waz.y;
-            cout << waz.x << endl;
-            cout << waz.y << endl;
-            cout << waz.historiaX[waz.ile]<<endl;
-            cout << waz.historiaY[waz.ile]<<endl; 
-            cout << waz.ile<<endl;
-            waz.ile++;
                         
-                    */
-                        
+                                                            
+                    waz.historiaX[waz.ile]=waz.x;
+                    waz.historiaY[waz.ile]=waz.y;
+                    tab[waz.historiaX[waz.ile-waz.dlugosc]][waz.historiaY[waz.ile-waz.dlugosc]]='p';
+                    waz.ile++;
 
-                        
                         //sprawdza czy klawisz zostal wcisniety
                     if(kbhit())
                     {
-                        wybor=getch();                       
-                            
+                        wybor=getch();                                          
                     }
                     //Instrukcje dla wcisnietego klawisza
                             if(wybor==72)
@@ -326,10 +312,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
                             {
                                 lewo(waz);
                             }
-                            
-
-
-                    
+                                                
                         //ustalanie pozycji węża po kolizji ze sciana 
                         if(waz.x<0)
                         {
@@ -436,7 +419,10 @@ void pole(char **&tab,int szer,int wys,int szyb)
                         }
 
                       
-                        
+        cout << endl << "ile: "<< waz.ile << endl<<endl;
+        cout << "histX :  " << waz.historiaX[waz.ile-1] << "    histY :  " << waz.historiaY[waz.ile-1] << endl;
+        cout << "wX :  " << waz.x << "      wY :  " << waz.y <<endl;
+
         Sleep(szyb*50);
         }while(wybor!='q');
 ////////////////////////////////////////////////////////////////////////////////////////////
