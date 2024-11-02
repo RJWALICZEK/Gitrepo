@@ -9,8 +9,7 @@ using namespace std;
 //ZMIENNE GLOBALNE
 //dla menu
 char wybor;
-//dla pola do gry
-int szerokosc, wysokosc, szybkosc;
+
 //dla sterowania
 
 //pozycja obiektow
@@ -45,7 +44,11 @@ void sredni();
 void trudny();
 //******
 void zwolnijPamiec(char **&tab, int szer);
-void pole(char **&tab,int szer,int wys, int szyb);
+void pole(char **&tab,int szer,int wys, int szyb, int kol);
+void rysujPole(char **&tab,int szer,int wys,int &pkt);
+//kolizje
+void kolizjaSciana (PozycjaWaz &pW, int szer, int wys);
+void kolizjaScianaLatwy (PozycjaWaz &pW, int szer, int wys);
 //sterowanie
 void gora(PozycjaWaz &p);
 void dol(PozycjaWaz &p);
@@ -182,11 +185,12 @@ void latwy()
 {
     char **stol = nullptr;
 
-    szerokosc = 36;
-    wysokosc = 18;
-    szybkosc= 3;
+    int szerokosc = 36;
+    int wysokosc = 18;
+    int szybkosc= 3;
+    int kolizja=1;
 
-        pole(stol, szerokosc, wysokosc, szybkosc);
+        pole(stol, szerokosc, wysokosc, szybkosc, kolizja);
 
     zwolnijPamiec(stol,szerokosc);
 
@@ -196,11 +200,12 @@ void sredni()
 {
     char **stol = nullptr;
 
-    szerokosc = 30;
-    wysokosc = 15;
-    szybkosc= 2;
+    int szerokosc = 30;
+    int wysokosc = 15;
+    int szybkosc= 2;
+    int kolizja=2;
     
-        pole(stol,szerokosc, wysokosc, szybkosc);
+        pole(stol,szerokosc, wysokosc, szybkosc, kolizja);
 
 
     zwolnijPamiec(stol,szerokosc);
@@ -211,11 +216,12 @@ void trudny()
 {
     char **stol = nullptr;
     
-    szerokosc = 20;
-    wysokosc = 10;
-    szybkosc = 1;
+    int szerokosc = 20;
+    int wysokosc = 10;
+    int szybkosc = 1;
+    int kolizja=2;
 
-        pole(stol, szerokosc, wysokosc, szybkosc);
+        pole(stol, szerokosc, wysokosc, szybkosc, kolizja);
 
 
 
@@ -223,7 +229,7 @@ void trudny()
      
 }
 //FUNKCJA TWORZACA POLE DO GRY
-void pole(char **&tab,int szer,int wys,int szyb)
+void pole(char **&tab,int szer,int wys,int szyb, int kol)
 {
     system("cls");
 
@@ -240,15 +246,15 @@ void pole(char **&tab,int szer,int wys,int szyb)
     
      //DEKLARACJA I LOSOWANIE WSP WEZA
     PozycjaWaz waz;
-    waz.x = rand()%(szerokosc-1);
-    waz.y = rand()%(wysokosc-1);
+    waz.x = rand()%(szer-1);
+    waz.y = rand()%(wys-1);
 
     //DEKLARACJA I LOSOWANIE WSP PUNKT
     PozycjaPunkt punkt;
     do
     {
-        punkt.x = rand()%(szerokosc-1);
-        punkt.y = rand()%(wysokosc-1);
+        punkt.x = rand()%(szer-1);
+        punkt.y = rand()%(wys-1);
                     
     } while (tab[punkt.x][punkt.y]!=tab[waz.x][waz.y]);
     
@@ -263,12 +269,12 @@ void pole(char **&tab,int szer,int wys,int szyb)
 //////////////////////////////////////////////////////////////////////////
 /////////--------------------------GRA PETLA----------------------------------
 
-    for(int i=3; i>0; i--)
+   /* for(int i=3; i>0; i--)
     {
         cout << "\n\n\n\n\n\n\t\t" << i ;
         Sleep(700);
         system("cls");
-    }
+    }   */
             wybor=rand()%4;
 
     switch(wybor)
@@ -281,13 +287,13 @@ void pole(char **&tab,int szer,int wys,int szyb)
 
     do
         {
-           
-            system("cls");
+          system("cls"); 
+            
                         
                                                             
                     waz.historiaX[waz.ile]=waz.x;
                     waz.historiaY[waz.ile]=waz.y;
-                    tab[waz.historiaX[waz.ile-waz.dlugosc]][waz.historiaY[waz.ile-waz.dlugosc]]='p';
+                    tab[waz.historiaX[waz.ile-waz.dlugosc+1]][waz.historiaY[waz.ile-waz.dlugosc+1]]='p';
                     waz.ile++;
 
                         //sprawdza czy klawisz zostal wcisniety
@@ -299,6 +305,7 @@ void pole(char **&tab,int szer,int wys,int szyb)
                             if(wybor==72)
                             {
                                 gora(waz);
+                                
                             }
                             else if(wybor==80)
                             {
@@ -313,24 +320,25 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 lewo(waz);
                             }
                                                 
-                        //ustalanie pozycji węża po kolizji ze sciana 
-                        if(waz.x<0)
-                        {
-                            waz.x=szerokosc-2;
-                        }
-                        else if(waz.x>szerokosc-2)
-                        {
-                            waz.x=0;
-                        }
-                        if(waz.y==wysokosc)
-                        {
-                            waz.y=0;
-                        }
-                        else if(waz.y==-1)
-                        {
-                            waz.y=wysokosc-1;
-                        }
+                        //KOLIZJA ZE SCIANA
 
+                        kolizjaScianaLatwy(waz,szer,wys);
+
+                    /*    switch(kol)
+                        {
+                            case 1:
+                            {
+                                kolizjaScianaLatwy(waz,szer,wys);
+                                break;
+                            }
+                            case 2:
+                            {
+                                kolizjaSciana(waz, szer, wys); 
+                                break;
+                            }
+                        
+                        }
+                    */
                          //USTALANIE POZYCJI WEZA
 
                          tab[waz.x][waz.y]='w';
@@ -341,49 +349,9 @@ void pole(char **&tab,int szer,int wys,int szyb)
                         
 
               ////////////////RYSOWANIE RAMKI POLA GRY////////////////
-                        for(int i=0; i<szerokosc; i++)
-                        {
-                            cout << "-";
-                            if(i==szerokosc-1)
-                            {
-                                cout << endl;
-                                for(int j=0; j<wysokosc; j++)
-                                {
-                                    cout << "|" ;
+                        
+                        rysujPole(tab, szer, wys, punkty);
 
-                                    for (int l=0; l<szer-1; l++)
-                                    {
-                                        if(tab[l][j]=='p')
-                                        {
-                                            cout << " ";
-                                        }
-                                        if(tab[l][j]=='w')
-                                        {
-                                            cout<<"w";
-                                        }
-                                        if(tab[l][j]=='x')
-                                        {
-                                            cout << "o";
-                                        }
-                                    }
-                                    
-                                    if(j==2)
-                                    {
-                                        cout << "|      punkty : " << punkty << endl;
-                                    }
-                                    else
-                                    cout << "|" <<endl;
-                                    
-                                    if(j==wysokosc-1)
-                                    {
-                                        for (int k=0; k<szerokosc; k++)
-                                        {
-                                            cout << "-";
-                                        }
-                                    }
-                                }
-                            }
-                        }
                  ////////////////RYSOWANIE RAMKI POLA GRY ////////////////
                         cout << "   q : wyjscie     p : pauza" <<endl;
 
@@ -397,12 +365,11 @@ void pole(char **&tab,int szer,int wys,int szyb)
                                 }while(wybor=!75 && wybor!=72 && wybor!=77 && wybor!=80);
                             }
                    
-                    
-
                     //kolizja weza z punktem "punkt"
                         if(waz.x==punkt.x && waz.y==punkt.y)
                         {
                             punkty++;
+                            waz.dlugosc++;
                             tab[punkt.x][punkt.y]='w';
                             
                                 //LOSOWANIE WSP PUNKTU
@@ -417,17 +384,29 @@ void pole(char **&tab,int szer,int wys,int szyb)
 
                                 tab[punkt.x][punkt.y]='x';    
                         }
+                        
+                        //Kolizja weza z punktem "w"
+                        for(int i=waz.ile-waz.dlugosc; i<waz.ile; i++)
+                        {
+                            if(waz.x == waz.historiaX[i-1] && waz.y==waz.historiaY[i-1])
+                            {
+                                wybor='q';
+                            }
+                        }
+                       
 
                       
-        cout << endl << "ile: "<< waz.ile << endl<<endl;
+       /* cout << endl << "ile: "<< waz.ile << endl<<endl;
         cout << "histX :  " << waz.historiaX[waz.ile-1] << "    histY :  " << waz.historiaY[waz.ile-1] << endl;
         cout << "wX :  " << waz.x << "      wY :  " << waz.y <<endl;
-
+        */
+        
         Sleep(szyb*50);
         }while(wybor!='q');
 ////////////////////////////////////////////////////////////////////////////////////////////
+        cout << "\n\t KONIEC GRY\n    TWOJ WYNIK TO : " << punkty;
 ////////////////////////////////////////////////////////////////////////////////////////////
-    cout << endl;
+    cout << endl << endl;
     system("pause");
 }
 
@@ -440,6 +419,82 @@ void zwolnijPamiec(char **&tab, int szer)
     }
     delete [] tab;
 }
+//Rysowanie pola do gry
+void rysujPole(char **&tab,int szer,int wys,int &pkt)
+{
+    for(int i=0; i<szer; i++)
+                        {
+                            cout << "-";
+                            if(i==szer-1)
+                            {
+                                cout << endl;
+                                for(int j=0; j<wys; j++)
+                                {
+                                    cout << "|" ;
+
+                                for (int l=0; l<szer-1; l++)
+                                {
+                                    if(tab[l][j]=='p')
+                                    {
+                                        cout << " ";
+                                    }
+                                    if(tab[l][j]=='w')
+                                    {
+                                        cout<<"w";
+                                    }
+                                    if(tab[l][j]=='x')
+                                    {
+                                        cout << "o";
+                                    }
+                                }
+                                
+                                if(j==2)
+                                {
+                                        cout << "|      punkty : " << pkt << endl;
+                                    }                                    else
+                                cout << "|" <<endl;
+                                
+                                if(j==wys-1)
+                                {
+                                    for (int k=0; k<szer; k++)
+                                    {
+                                        cout << "-";
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+}
+//kolizje
+void kolizjaScianaLatwy(PozycjaWaz &pW, int szer, int wys)
+{
+    if(pW.x<0)
+    {
+        pW.x=szer-2;
+    }
+    else if(pW.x>szer-2)
+    {
+        pW.x=0; 
+    }
+    if(pW.y==wys)  
+    {
+        pW.y=0;
+    }
+    else if(pW.y==-1)
+    {
+        pW.y=wys-1;
+    }
+}
+
+void kolizjaSciana(PozycjaWaz &pW, int szer, int wys)
+{
+    if(pW.x<1 || pW.x>szer-2 || pW.y==wys || pW.y==-1)
+    {
+        wybor='q';
+    }
+   
+}
 
 
 //Instrukcje dla wcisnietego klawisza
@@ -451,6 +506,7 @@ void gora(PozycjaWaz &p)
 void dol(PozycjaWaz &p)
 {
    p.y++;
+
 }
 void prawo(PozycjaWaz &p)
 {
