@@ -240,12 +240,12 @@ void pole(char **&tab,int szer,int wys,int szyb)
     
      //DEKLARACJA I LOSOWANIE WSP WEZA
     PozycjaWaz waz;
-    /*waz.x = rand()%(szerokosc-1);
-    waz.y = rand()%(wysokosc-1);*/
+    waz.x = rand()%(szerokosc-1);
+    waz.y = rand()%(wysokosc-1);
 
-    waz.x = 10;
+  /*  waz.x = 10;
     waz.y = 10;
-   
+            */   
     
     //DEKLARACJA I LOSOWANIE WSP PUNKT
     PozycjaPunkt punkt;
@@ -268,50 +268,68 @@ void pole(char **&tab,int szer,int wys,int szyb)
                         }
 //////////////////////////////////////////////////////////////////////////
 /////////--------------------------GRA PETLA----------------------------------
+
+    for(int i=3; i>0; i--)
+    {
+        cout << "\n\n\n\n\n\n\t\t" << i ;
+        Sleep(1000);
+        system("cls");
+    }
+            wybor=rand()%4;
+
+    switch(wybor)
+    {
+        case 0: wybor=72;break;
+        case 1: wybor=75;break;
+        case 2: wybor=77;break;
+        case 3: wybor=80;break;
+    }
+
     do
         {
-            
-
-           waz.ile++;
-            waz.historiaX[waz.ile]=waz.x;
+           
+            system("cls");
+           
+        /*    waz.historiaX[waz.ile]=waz.x;
             waz.historiaY[waz.ile]=waz.y;
             cout << waz.x << endl;
             cout << waz.y << endl;
             cout << waz.historiaX[waz.ile]<<endl;
-            cout << waz.historiaY[waz.ile]; 
-                        system("cls");
-
+            cout << waz.historiaY[waz.ile]<<endl; 
+            cout << waz.ile<<endl;
+            waz.ile++;
+                        
+                    */
                         
 
                         
                         //sprawdza czy klawisz zostal wcisniety
                     if(kbhit())
                     {
-                       wybor=getch();
+                        wybor=getch();                       
+                            
                     }
-
                     //Instrukcje dla wcisnietego klawisza
-                        if(wybor==72)
-                        {
-                            gora(waz);
-                        }
-                        else if(wybor==80)
-                        {
-                            dol(waz);
-                        }
-                        else if(wybor==77)
-                        {
-                            prawo(waz);
-                        }
-                        else if(wybor==75)
-                        {
-                            lewo(waz);
-                        }
-                        if(wybor=='p')
-                        {
-                            system("pause");
-                        }
+                            if(wybor==72)
+                            {
+                                gora(waz);
+                            }
+                            else if(wybor==80)
+                            {
+                                dol(waz);
+                            }
+                            else if(wybor==77)
+                            {
+                                prawo(waz);
+                            }
+                            else if(wybor==75)
+                            {
+                                lewo(waz);
+                            }
+                            
 
+
+                    
                         //ustalanie pozycji węża po kolizji ze sciana 
                         if(waz.x<0)
                         {
@@ -386,14 +404,23 @@ void pole(char **&tab,int szer,int wys,int szyb)
                  ////////////////RYSOWANIE RAMKI POLA GRY ////////////////
                         cout << "   q : wyjscie     p : pauza" <<endl;
 
-
+                        //Pauze
+                          if(wybor=='p')
+                            {                               
+                                do
+                                {    
+                                    cout << "\t*Pauza\n\t  wcisnij kierunek*";
+                                        wybor=getch();
+                                }while(wybor=!75 && wybor!=72 && wybor!=77 && wybor!=80);
+                            }
+                   
                     
 
                     //kolizja weza z punktem "punkt"
                         if(waz.x==punkt.x && waz.y==punkt.y)
                         {
                             punkty++;
-                            tab[punkt.x][punkt.y]='p';
+                            tab[punkt.x][punkt.y]='w';
                             
                                 //LOSOWANIE WSP PUNKTU
                                 do
@@ -407,6 +434,8 @@ void pole(char **&tab,int szer,int wys,int szyb)
 
                                 tab[punkt.x][punkt.y]='x';    
                         }
+
+                      
                         
         Sleep(szyb*50);
         }while(wybor!='q');
