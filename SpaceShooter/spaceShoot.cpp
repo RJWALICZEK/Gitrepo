@@ -1,5 +1,8 @@
 #include <iostream>
 #include <conio.h>
+#include <cstdlib>
+#include <windows.h>
+
 
 
 using namespace std;
@@ -8,15 +11,24 @@ using namespace std;
     char choice;
     int op=1;
 //objects
-struct object
+struct Object
 {
     int x;
     int y;
 };
 //functions
+
 void field();
 int menu();
 void makeField(char **&tab, int w, int h);
+void deleteField(char **&tab, int w);
+void refreshField(char **&tab, int w, int h);
+//controls
+void left(Object &s);
+void right(Object &s);
+void shot(Object *&m, Object &x);
+//*******
+
 
 int main()
 {
@@ -77,10 +89,53 @@ void field()
     char **field;
     int height = 20;
     int width = 60;
-    string space = "                                                            ";
+    Object ship;
+    Object *missle=nullptr;
+    ship.x=width/2;
+    ship.y=height-2;
     makeField(field, width, height);
+    
+            do
+            {   
+                
+                
+               system("cls");
+                
+                if(kbhit())
+                {
+                    choice=getch();
+                    if(choice==75 && ship.x>0)
+                    {
+                        left(ship);
+                    }
+                    else if(choice==77 && ship.x<width-1)
+                    {
+                        right(ship);
+                    }
+                    else if(choice==32 && missle==nullptr)
+                    {
+                        missle=new Object;
+                        shot(missle,ship);
+                    }
+                }
+                
+                if(missle != nullptr)
+                {
+                    missle->y--;
+                    if(missle->y<0)
+                    {
+                        delete missle;
+                        missle = nullptr;
+                    }
+                }
 
-    for(int i=0; i<width; i++)
+                refreshField(field, width, height);
+                field[ship.x][ship.y]='A';
+                if(missle!=nullptr)
+                {
+                    field[missle->x][missle->y]='*';
+                }    
+                 for(int i=0; i<width; i++)
                         {
                             cout << "-";
                             if(i==width-1)
@@ -94,7 +149,15 @@ void field()
                                 {
                                     if(field[l][j]=='o')
                                     {
-                                        cout << ".";
+                                        cout << " ";
+                                    }
+                                    if(field[l][j]=='A')
+                                    {
+                                        cout << "A";
+                                    }
+                                    if(field[l][j]=='*')
+                                    {
+                                        cout << "*";
                                     }
                                 }
                                 
@@ -114,9 +177,21 @@ void field()
                             }
                         }
                     }
+                    
 
+                    cout << endl << "X: "<< ship.x<< "   Y: " << ship.y;
+                    if(missle!=nullptr)
+                    {
+                        cout << "\tmX: "<< missle->x<< "   mY: " << missle->y << endl;
+                    }
+                    
+                Sleep(50);
 
-    system("pause");
+                
+            }while(choice!='q');
+
+        deleteField(field,width);
+
 
 }
 
@@ -135,4 +210,38 @@ void makeField(char **&tab, int w, int h)
         }
     }
 
+}
+void refreshField(char **&tab, int w, int h)
+{
+    for(int i=0; i<w; i++)
+    {
+        for(int j=0; j<h; j++)
+        {
+            tab[i][j] = 'o';
+        }
+    }
+}
+void deleteField(char **&tab, int w)
+{
+    for(int i=0; i<w; i++)
+    {
+        delete [] tab[i];
+    }
+    delete [] tab;
+    tab = nullptr;
+
+}
+
+void left(Object &s)
+{
+    s.x--;
+}
+void right(Object &s)
+{
+    s.x++;
+}
+void shot(Object *&m, Object &x)
+{
+    m->x =  x.x;
+    m->y =  x.y-1;
 }
