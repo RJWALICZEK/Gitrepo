@@ -267,6 +267,14 @@ void printField(char **&field, int width, int height, int pkt, int dmg)
                                     {
                                         cout << " ";
                                     }
+                                    if(field[l][j]=='0')
+                                    {
+                                        cout << "O";
+                                    }
+                                    if(field[l][j]=='#')
+                                    {
+                                        cout << "#";
+                                    }
                                     if(field[l][j]=='A')
                                     {
                                         cout << "A";
@@ -306,9 +314,9 @@ void printField(char **&field, int width, int height, int pkt, int dmg)
 }
 void explosion(char **&field,int x, int y, int pkt, int dmg)
 {
-    char explosionFrame[2] = { '*', '*' };
+    char explosionFrame[3] = { '#', '*', '0' };
     
-    for(int i=0; i<2; ++i)
+    for(int i=0; i<3; ++i)
     {
         //swap symbol around target place on field
         field[x][y]= explosionFrame[i];
@@ -320,7 +328,7 @@ void explosion(char **&field,int x, int y, int pkt, int dmg)
         //print field witch explosion effect
         printField( field, 26, 23, pkt, dmg);
         //delay
-        Sleep(20);
+        Sleep(5);
 
         //refresh field before next frame
         system("cls");
