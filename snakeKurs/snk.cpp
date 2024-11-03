@@ -30,6 +30,7 @@ struct PozycjaPunkt
 {
     int x;
     int y;
+    int Extra;
 };
 
 
@@ -101,15 +102,8 @@ int main()
                 {
                     exit(0);
                 }
-            } 
-
-        
-       
-      
-
+            }
     }   
-
-
 
     return 0;
 }
@@ -251,6 +245,7 @@ void pole(char **&tab,int szer,int wys,int szyb, int kol)
 
     //DEKLARACJA I LOSOWANIE WSP PUNKT
     PozycjaPunkt punkt;
+    PozycjaPunkt punktExtra;
     do
     {
         punkt.x = rand()%(szer-1);
@@ -288,9 +283,7 @@ void pole(char **&tab,int szer,int wys,int szyb, int kol)
     do
         {
           system("cls"); 
-            
-                        
-                                                            
+                                                           
                     waz.historiaX[waz.ile]=waz.x;
                     waz.historiaY[waz.ile]=waz.y;
                     tab[waz.historiaX[waz.ile-waz.dlugosc+1]][waz.historiaY[waz.ile-waz.dlugosc+1]]='p';
@@ -384,6 +377,13 @@ void pole(char **&tab,int szer,int wys,int szyb, int kol)
 
                                 tab[punkt.x][punkt.y]='x';    
                         }
+
+                        if(waz.x==punktExtra.x && waz.y==punktExtra.y)
+                        {
+                            punkty+=5;
+                            waz.dlugosc++;
+                            tab[punkt.x][punkt.y]='w';
+                        }
                         
                         //Kolizja weza z punktem "w"
                         for(int i=waz.ile-waz.dlugosc; i<waz.ile; i++)
@@ -393,9 +393,18 @@ void pole(char **&tab,int szer,int wys,int szyb, int kol)
                                 wybor='q';
                             }
                         }
-                       
 
-                      
+                    /*//losowanie ekstra punktu
+                            punktExtra.Extra=rand()%10;
+                        if(punktExtra.Extra<2)
+                        {
+                            do{
+                                punktExtra.x=rand()%(szer-1);
+                                punktExtra.y=rand()%(wys-1);
+                            }while(tab[punktExtra.x][punktExtra.y]!=tab[waz.x][waz.y]||tab[punktExtra.x][punktExtra.y]!=tab[punkt.x][punkt.y]);
+                            tab[punktExtra.x][punktExtra.y]='*';
+                        } */    
+                        
        /* cout << endl << "ile: "<< waz.ile << endl<<endl;
         cout << "histX :  " << waz.historiaX[waz.ile-1] << "    histY :  " << waz.historiaY[waz.ile-1] << endl;
         cout << "wX :  " << waz.x << "      wY :  " << waz.y <<endl;
@@ -445,6 +454,10 @@ void rysujPole(char **&tab,int szer,int wys,int &pkt)
                                     if(tab[l][j]=='x')
                                     {
                                         cout << "o";
+                                    }
+                                    if(tab[l][j]=='*')
+                                    {
+                                        cout << "*";
                                     }
                                 }
                                 
