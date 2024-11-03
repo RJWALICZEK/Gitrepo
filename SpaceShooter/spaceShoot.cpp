@@ -32,7 +32,7 @@ void shot(Object *&m, Object &x);
 
 int main()
 {
-
+    srand(time(NULL));
     while(true)
     {
 
@@ -91,16 +91,21 @@ void field()
     int width = 60;
     Object ship;
     Object *missle=nullptr;
+    Object *target=nullptr;
     ship.x=width/2;
     ship.y=height-2;
     makeField(field, width, height);
+
+    target = new Object;
+    target->x=rand()%width-1;
+    target->y=3;
     
             do
             {   
                 
                 
                system("cls");
-                
+            //MOVEMENT DETECT              
                 if(kbhit())
                 {
                     choice=getch();
@@ -118,7 +123,7 @@ void field()
                         shot(missle,ship);
                     }
                 }
-                
+                //CHECKING MISSLE STATUS
                 if(missle != nullptr)
                 {
                     missle->y--;
@@ -128,13 +133,23 @@ void field()
                         missle = nullptr;
                     }
                 }
-
+                
+                // REFRESH FIELD, ADDING OBJECTS
                 refreshField(field, width, height);
                 field[ship.x][ship.y]='A';
                 if(missle!=nullptr)
                 {
                     field[missle->x][missle->y]='*';
                 }    
+                //checking target status
+                if (target != nullptr)
+                {
+                    field[target->x][target->y] = 'V';
+                }
+
+
+
+                // DRAWING GAME FIELD
                  for(int i=0; i<width; i++)
                         {
                             cout << "-";
@@ -159,6 +174,10 @@ void field()
                                     {
                                         cout << "*";
                                     }
+                                    if(field[l][j]=='V')
+                                    {
+                                        cout << "V";
+                                    }
                                 }
                                 
                                 if(j==2)
@@ -177,8 +196,16 @@ void field()
                             }
                         }
                     }
+                    //Colision detect
+                    if (missle != nullptr && target->x == missle->x && target != nullptr && target->y==missle->y)
+                    {
+                        delete target;
+                        target = nullptr;
+                        delete missle;
+                        missle = nullptr;
+                    }
                     
-
+                //ADITIONAL INFORMATIONS
                     cout << endl << "X: "<< ship.x<< "   Y: " << ship.y;
                     if(missle!=nullptr)
                     {
