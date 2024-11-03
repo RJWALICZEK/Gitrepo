@@ -97,7 +97,7 @@ void field()
     makeField(field, width, height);
 
     target = new Object;
-    target->x=rand()%width-1;
+    target->x=rand()%width;
     target->y=3;
     
             do
@@ -203,6 +203,9 @@ void field()
                         target = nullptr;
                         delete missle;
                         missle = nullptr;
+                        target = new Object;
+                        target->x=rand()%width;
+                        target->y=3;
                     }
                     
                 //ADITIONAL INFORMATIONS
