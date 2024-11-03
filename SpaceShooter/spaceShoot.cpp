@@ -20,14 +20,16 @@ struct Object
 
 void field();
 int menu();
+//field
 void makeField(char **&tab, int w, int h);
 void deleteField(char **&tab, int w);
 void refreshField(char **&tab, int w, int h);
-//controls
+//*********
 void left(Object &s);
 void right(Object &s);
 void shot(Object *&m, Object &x);
 //*******
+void createMissleObject(Object *&o, int w);
 
 
 int main()
@@ -87,24 +89,30 @@ int menu()
 void field()
 {
     char **field;
-    int height = 20;
-    int width = 60;
+    int height = 23;
+    int width = 26;
+    int pkt=0;
+    int counter = 0;
+    int dmg = 0;
     Object ship;
     Object *missle=nullptr;
     Object *target=nullptr;
     ship.x=width/2;
     ship.y=height-2;
     makeField(field, width, height);
-
-    target = new Object;
-    target->x=rand()%width;
-    target->y=3;
+    
+    //CREATE TARGET OBJECT
+    createMissleObject(target, width);
+    
     
             do
             {   
                 
                 
                system("cls");
+            //game frame counter
+                    counter++;
+   
             //MOVEMENT DETECT              
                 if(kbhit())
                 {
@@ -113,7 +121,7 @@ void field()
                     {
                         left(ship);
                     }
-                    else if(choice==77 && ship.x<width-1)
+                    else if(choice==77 && ship.x<width-2)
                     {
                         right(ship);
                     }
@@ -134,9 +142,11 @@ void field()
                     }
                 }
                 
+                
                 // REFRESH FIELD, ADDING OBJECTS
                 refreshField(field, width, height);
                 field[ship.x][ship.y]='A';
+
                 if(missle!=nullptr)
                 {
                     field[missle->x][missle->y]='*';
@@ -150,7 +160,7 @@ void field()
 
 
                 // DRAWING GAME FIELD
-                 for(int i=0; i<width; i++)
+                 for(int i=0; i<width+1; i++)
                         {
                             cout << "-";
                             if(i==width-1)
@@ -181,11 +191,17 @@ void field()
                                 }
                                 
                                 if(j==2)
+                                    {
+                                        cout << "|   pkt : " << pkt << endl ;
+                                    }
+                                if(j==3)
+                                    {
+                                        cout << "|                dmg : " << dmg << endl ;
+                                    }                                      
+                                else
                                 {
-                                        cout << "|      pkt : " << endl;
-                                    }                                    else
-                                cout << "|" <<endl;
-                                
+                                    cout << "|" <<endl;
+                                }
                                 if(j==height-1)
                                 {
                                     for (int k=0; k<width; k++)
@@ -196,30 +212,46 @@ void field()
                             }
                         }
                     }
-                    //Colision detect
+                    //COLISION DETECT
+                    //for hit
                     if (missle != nullptr && target->x == missle->x && target != nullptr && target->y==missle->y)
                     {
                         delete target;
                         target = nullptr;
                         delete missle;
                         missle = nullptr;
-                        target = new Object;
-                        target->x=rand()%width;
-                        target->y=3;
+                        counter=3;
+                        createMissleObject(target,width);
+                        pkt++;
                     }
-                    
+                    //for target hit ground
+                    else if(target != nullptr && counter==8)
+                    {
+                        target->y++;
+                        if(target->y>height-1)
+                        {
+                            delete target;
+                            target = nullptr;
+                            
+                            dmg++;
+                            createMissleObject(target,width);
+                        }
+                        counter=0;
+                    }
+                                        
                 //ADITIONAL INFORMATIONS
-                    cout << endl << "X: "<< ship.x<< "   Y: " << ship.y;
+                    cout << endl << "X: "<< ship.x<< "   Y: " << ship.y << endl << "tX :" << target->x << "    tY: " << target->y << endl;
                     if(missle!=nullptr)
                     {
                         cout << "\tmX: "<< missle->x<< "   mY: " << missle->y << endl;
                     }
                     
-                Sleep(50);
+                Sleep(1);
 
                 
-            }while(choice!='q');
-
+            }while(choice!='q' && dmg<3);
+        cout << " \t KONIEC GRY\n";
+        system("pause");
         deleteField(field,width);
 
 
@@ -259,6 +291,14 @@ void deleteField(char **&tab, int w)
     }
     delete [] tab;
     tab = nullptr;
+
+}
+
+void createMissleObject(Object *&o, int w)
+{
+    o = new Object;
+    o->x=rand()%(w-1);
+    o->y=3;
 
 }
 
