@@ -22,8 +22,10 @@ void field();
 int menu();
 //field
 void makeField(char **&tab, int w, int h);
+void printField(char **&field, int width, int height, int pkt, int dmg);
 void deleteField(char **&tab, int w);
 void refreshField(char **&tab, int w, int h);
+void explosion(char **&field,int width, int height, int pkt, int dmg);
 //*********
 void left(Object &s);
 void right(Object &s);
@@ -131,95 +133,19 @@ void field()
                         shot(missle,ship);
                     }
                 }
-                //CHECKING MISSLE STATUS
-                if(missle != nullptr)
-                {
-                    missle->y--;
-                    if(missle->y<0)
-                    {
-                        delete missle;
-                        missle = nullptr;
-                    }
-                }
-                
-                
-                // REFRESH FIELD, ADDING OBJECTS
-                refreshField(field, width, height);
-                field[ship.x][ship.y]='A';
 
-                if(missle!=nullptr)
-                {
-                    field[missle->x][missle->y]='*';
-                }    
-                //checking target status
-                if (target != nullptr)
-                {
-                    field[target->x][target->y] = 'V';
-                }
-
-
-
-                // DRAWING GAME FIELD
-                 for(int i=0; i<width+1; i++)
-                        {
-                            cout << "-";
-                            if(i==width-1)
-                            {
-                                cout << endl;
-                                for(int j=0; j<height; j++)
-                                {
-                                    cout << "|" ;
-
-                                for (int l=0; l<width-1; l++)
-                                {
-                                    if(field[l][j]=='o')
-                                    {
-                                        cout << " ";
-                                    }
-                                    if(field[l][j]=='A')
-                                    {
-                                        cout << "A";
-                                    }
-                                    if(field[l][j]=='*')
-                                    {
-                                        cout << "*";
-                                    }
-                                    if(field[l][j]=='V')
-                                    {
-                                        cout << "V";
-                                    }
-                                }
-                                
-                                if(j==2)
-                                    {
-                                        cout << "|   pkt : " << pkt << endl ;
-                                    }
-                                if(j==3)
-                                    {
-                                        cout << "|                dmg : " << dmg << endl ;
-                                    }                                      
-                                else
-                                {
-                                    cout << "|" <<endl;
-                                }
-                                if(j==height-1)
-                                {
-                                    for (int k=0; k<width; k++)
-                                    {
-                                        cout << "-";
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    //COLISION DETECT
-                    //for hit
+                //COLISION DETECT
+                    //for hit target
                     if (missle != nullptr && target->x == missle->x && target != nullptr && target->y==missle->y)
                     {
+                        explosion(field,target->x,target->y,pkt,dmg);
+
                         delete target;
                         target = nullptr;
+                        
                         delete missle;
                         missle = nullptr;
+                        
                         counter=3;
                         createMissleObject(target,width);
                         pkt++;
@@ -238,6 +164,35 @@ void field()
                         }
                         counter=0;
                     }
+
+                //CHECKING MISSLE STATUS
+                if(missle != nullptr)
+                {
+                    missle->y--;
+                    if(missle->y<0)
+                    {
+                        delete missle;
+                        missle = nullptr;
+                    }
+                }
+                                
+                // REFRESH FIELD, ADDING OBJECTS
+                refreshField(field, width, height);
+                field[ship.x][ship.y]='A';
+
+                if(missle!=nullptr)
+                {
+                    field[missle->x][missle->y]='*';
+                }    
+                //checking target status
+                if (target != nullptr)
+                {
+                    field[target->x][target->y] = 'V';
+                }
+
+                // DRAWING GAME FIELD
+                 
+                 printField(field, width, height, pkt, dmg);   
                                         
                 //ADITIONAL INFORMATIONS
                     cout << endl << "X: "<< ship.x<< "   Y: " << ship.y << endl << "tX :" << target->x << "    tY: " << target->y << endl;
@@ -291,6 +246,86 @@ void deleteField(char **&tab, int w)
     }
     delete [] tab;
     tab = nullptr;
+
+}
+
+void printField(char **&field, int width, int height, int pkt, int dmg)
+{
+    for(int i=0; i<width+1; i++)
+                        {
+                            cout << "-";
+                            if(i==width-1)
+                            {
+                                cout << endl;
+                                for(int j=0; j<height; j++)
+                                {
+                                    cout << "|" ;
+
+                                for (int l=0; l<width-1; l++)
+                                {
+                                    if(field[l][j]=='o')
+                                    {
+                                        cout << " ";
+                                    }
+                                    if(field[l][j]=='A')
+                                    {
+                                        cout << "A";
+                                    }
+                                    if(field[l][j]=='*')
+                                    {
+                                        cout << "*";
+                                    }
+                                    if(field[l][j]=='V')
+                                    {
+                                        cout << "V";
+                                    }
+                                }
+                                
+                                if(j==2)
+                                    {
+                                        cout << "|   pkt : " << pkt << endl ;
+                                    }
+                                if(j==3)
+                                    {
+                                        cout << "|                dmg : " << dmg << endl ;
+                                    }                                      
+                                else
+                                {
+                                    cout << "|" <<endl;
+                                }
+                                if(j==height-1)
+                                {
+                                    for (int k=0; k<width; k++)
+                                    {
+                                        cout << "-";
+                                    }
+                                }
+                            }
+                        }
+                    }
+}
+void explosion(char **&field,int x, int y, int pkt, int dmg)
+{
+    char explosionFrame[2] = { '*', '*' };
+    
+    for(int i=0; i<2; ++i)
+    {
+        //swap symbol around target place on field
+        field[x][y]= explosionFrame[i];
+        if (x > 0) field[x - 1][y] = explosionFrame[i];     // nad
+        if (x < 23) field[x + 1][y] = explosionFrame[i];    // pod
+        if (y > 0) field[x][y - 1] = explosionFrame[i];     // lewo
+        if (y < 26) field[x][y + 1] = explosionFrame[i];    // prawo
+
+        //print field witch explosion effect
+        printField( field, 26, 23, pkt, dmg);
+        //delay
+        Sleep(20);
+
+        //refresh field before next frame
+        system("cls");
+        
+    }
 
 }
 
