@@ -19,8 +19,9 @@ class List
     public:
     List();
     void newNode(int value);    
-    void rmNode(Node* ptr);
+    void rmNode();
     void printList();
+    void printLong();
     ~List()
     {
        Node* current=head;
@@ -120,7 +121,43 @@ bool List::isEmpty()
     else
     return false;
 }
+void List::rmNode()
+{
+    if(!isEmpty())
+    {
+        Node* toErase = head;
+        head=head->next;
+        delete toErase;
+    }
+}
+void List::printLong()
+{
+    system("cls");
+    int counter=1;
 
+    cout << "\tPRINTED LINKED LIST:\n\n\t"; 
+    Node* current = head;
+    while(current!=nullptr)
+    {
+        if(counter==1)
+        {
+            cout << " head: ";
+        }
+        else if(current->next==nullptr)
+        {
+            cout << " tail: ";
+        }
+        else
+        {
+            cout << " > ";
+        }
+        cout << current->data;
+        current=current->next;
+        counter++;
+    }
+    cout << endl;
+    system("pause");
+}
 
 /////// for Menu
 
@@ -135,12 +172,15 @@ void Menu::printMenu()
         cout << "1.Push\n2.Pop\n3.print\n\n4Exit\n>";
         cin >> choice;
 
-        switch(choice)
+        if(choice>0 && choice<5)
         {
-            case 1: push(); break;
-            case 2: break;
-            case 3: List::printList(); break;
-            case 4: exit(0);
+            switch(choice)
+            {
+                case 1: push(); break;
+                case 2: rmNode(); break;
+                case 3: List::printLong(); break;
+                case 4: exit(0);
+            }
         }
 }
 
