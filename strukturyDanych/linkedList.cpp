@@ -2,25 +2,74 @@
 
 using namespace std;
 
+//Node struct
 struct Node{
 
     int data;
     Node* next;
 };
-
+//main classes
 class List
 {
     private:
     Node* head;
     Node* temp;
+    void addNode(Node* ptr);
+    bool isEmpty();
     public:
     List();
-    void newNode(int value);
-    void addNode(Node* ptr);
+    void newNode(int value);    
     void rmNode(Node* ptr);
     void printList();
-    bool isEmpty();
+    ~List()
+    {
+       Node* current=head;
+       while(current!=nullptr)
+       {
+            temp = current;
+            current=temp->next;
+            delete temp;
+       }
+       delete temp;
+       delete head;
+    }
+    
 };
+
+class Menu: private List
+{
+    public:
+        Menu() = default;
+        void printMenu();
+        void push();
+        ~Menu() = default;
+    
+
+};
+//////////////////////////////////////////////////////////
+
+int main()
+{
+
+    List myList;
+    Menu menu1;
+    for(;;)
+    {
+        menu1.printMenu();
+
+        system("cls");
+
+
+    }
+
+    system("pause");
+
+    return 0;
+}
+
+///////////////class function define///////////////////////
+
+/// for List
 List::List()
 {
     head=nullptr;
@@ -59,7 +108,7 @@ void List::printList()
         } while (current!=nullptr);
     }
     else
-    cout << "\n\n\t***List is empty***";
+    cout << "\t***List is empty***";
    
 }
 bool List::isEmpty()
@@ -72,16 +121,37 @@ bool List::isEmpty()
     return false;
 }
 
-int main()
+
+/////// for Menu
+
+void Menu::printMenu()
 {
+    int choice;
+    int value;
+        cout << "\t LINKED LIST";
+        cout << "\n--------------------------\n";
+        List::printList();
+        cout << "\n--------------------------\n";
+        cout << "1.Push\n2.Pop\n3.print\n\n4Exit\n>";
+        cin >> choice;
 
-    List myList;
-    myList.newNode(1);
-    myList.newNode(2);
-    myList.newNode(3);
-    myList.printList();
+        switch(choice)
+        {
+            case 1: push(); break;
+            case 2: break;
+            case 3: List::printList(); break;
+            case 4: exit(0);
+        }
+}
 
-    system("pause");
+void Menu::push()
+{
+    int value;
+    system("cls");
+    cout << "\t LINKED LIST\n\n\n\n";
+    cout << "Enter value > ";
+    cin >> value;
+    List::newNode(value);    
 
-    return 0;
+
 }
