@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <cstdlib>
 #include <string>
+#include <windows.h>
 
 using namespace std;
 
@@ -58,6 +59,10 @@ do
     {
         c1.pop();
     }
+    else if(value==42||value==43||value==45||value==47)
+    {
+        c1.math(value);
+    }
   
     
     system("cls");
@@ -101,5 +106,52 @@ void Calc::pop()
     if(!this->memo.empty())
     {
         this->memo.pop();
+    }
+}
+
+void Calc::math(int op)
+{
+    int temp;
+    if(this->memo.size()>1)
+    {
+            switch(op)
+            {
+                case 43:
+                {
+                    temp=this->memo.top();
+                    this->memo.pop();
+                    this->memo.top() += temp;
+                    break;
+                }
+                case 45:
+                {
+                    temp=this->memo.top();
+                    this->memo.pop();
+                    this->memo.top() -= temp;
+                    break;
+                }
+                case 42:
+                {
+                    temp=this->memo.top();
+                    this->memo.pop();
+                    this->memo.top() *= temp;
+                    break;
+                }
+                case 47:
+                {
+                    if(this->memo.top()>0)
+                    {
+                        temp=this->memo.top();
+                        this->memo.pop();
+                        this->memo.top() /= temp;
+                    }
+                    else
+                    {
+                        cout << "\t 0 error" << endl;
+                        Sleep(500);
+                    }
+                    break;
+                }
+            }
     }
 }
