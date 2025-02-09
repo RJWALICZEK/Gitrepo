@@ -1,5 +1,9 @@
 #include <iostream>
+#include <conio.h>
 #include "gameManager.h"
+#include "mob.h"
+
+enum key { UP=72, DOWN=80, LEFT=75, RIGHT=77, ENTER=13, SPACE=32, ESC=27};
 
 Game::Game(int w, int h)
 : width(w) , height(h) {}
@@ -29,8 +33,12 @@ void Game::print()
                 std::cout << "\xBA";
             }
             else////////////////////////////////////Game field display
-            {
-             
+           {
+                /* if(player.getX()==i && player.getY()==j)
+                {
+                    std::cout << "\xDB";
+                }
+                else */
                 std::cout <<" ";
 
             }
@@ -51,3 +59,32 @@ void Game::print()
         std::cout << "\xCD";
     }
 }
+/*void Game::input()
+{
+    int input=getch();
+    switch(input)
+    {
+        case UP:
+        {
+            player.up();
+            break;
+        }
+        case DOWN:
+        {
+            player.down();
+            break;
+        }
+        case LEFT:
+        {
+            player.left();
+            break;
+        }
+        case RIGHT:
+        {
+            player.right();
+            break;
+        } 
+        default :
+        break;
+    }
+} */

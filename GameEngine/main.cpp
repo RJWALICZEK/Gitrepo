@@ -1,24 +1,28 @@
 #include <iostream>
+#include <windows.h>
 #include "gameManager.h"
 #include "mob.h"
-
- 
-using namespace std;
+#include "item.h"
+#include <conio.h>
 
 int main()
 {
-    Mob mob;
-    Player player;
+    int choice;
 
-    mob.metoda();
-    player.metoda();
+    Mob player("Knight", 90, 8);
+   Game game;
+   do{
+    game.print();
+    player.viewInfo();
+    if(kbhit())
+    {
+       std::cout << "\a";
+    }
+    system("cls");
+   }while(true);
 
-    Mob *ptr = new Player;
 
-    ptr->metoda();
-
-    
-    cout << endl;
+    std::cout << std::endl;
     system ("pause");
     return 0;
     
