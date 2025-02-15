@@ -12,12 +12,15 @@
 //WINDOW
 void pollEvents(sf::RenderWindow &pong);
 sf::RectangleShape addPaddle(sf::Vector2f pos);
+sf::RectangleShape addBlock();
 sf::CircleShape addBall(sf::Vector2f pos);
 //PADDLE
 void paddleControls(sf::RectangleShape &paddle1, sf::RectangleShape &paddle2);
-void colision(sf::CircleShape &ball, sf::RectangleShape &paddle1, sf::RectangleShape &paddle2, sf::Vector2f &ballVelocity, sf::RenderWindow &pong,unsigned int &points);
-void paddleColision(sf::CircleShape &ball, sf::RectangleShape &paddle1, sf::RectangleShape &paddle2, sf::Vector2f &ballVelocity);
-void ballWallColision(sf::CircleShape &ball, sf::RenderWindow &pong, sf::Vector2f &ballVelocity);
+void colision(sf::CircleShape &ball, sf::RectangleShape &paddle1, sf::RectangleShape &paddle2, sf::Vector2f &ballVelocity,
+     sf::RenderWindow &pong,unsigned int &points, sf::RectangleShape block);
+void paddleColision(sf::CircleShape &ball, sf::RectangleShape &paddle1, sf::RectangleShape &paddle2,
+     sf::Vector2f &ballVelocity);
+void ballWallColision(sf::CircleShape &ball, sf::RenderWindow &pong, sf::Vector2f &ballVelocity, sf::RectangleShape block);
 void ballColisionScore(sf::CircleShape &ball, sf::RenderWindow &pong, sf::Vector2f &ballVelocity,unsigned int &points);
 //NPC
 void npcAi(sf::CircleShape ball, sf::RectangleShape &paddle2);
@@ -136,21 +139,26 @@ void paddleControls(sf::RectangleShape &paddle1, sf::RectangleShape &paddle2 )
         }
 }
 
-void colision(sf::CircleShape &ball, sf::RectangleShape &paddle1, sf::RectangleShape &paddle2, sf::Vector2f &ballVelocity, sf::RenderWindow &pong, unsigned int &points)
+void colision(sf::CircleShape &ball, sf::RectangleShape &paddle1, sf::RectangleShape &paddle2, sf::Vector2f &ballVelocity,
+                 sf::RenderWindow &pong, unsigned int &points, sf::RectangleShape block)
 {
-    ballWallColision(ball, pong, ballVelocity);
+    ballWallColision(ball, pong, ballVelocity, block);
     paddleColision(ball, paddle1, paddle2, ballVelocity);
     ballColisionScore(ball, pong, ballVelocity, points);
 
     
 }
-void ballWallColision(sf::CircleShape &ball, sf::RenderWindow &pong, sf::Vector2f &ballVelocity)
+void ballWallColision(sf::CircleShape &ball, sf::RenderWindow &pong, sf::Vector2f &ballVelocity, sf::RectangleShape block)
 {
     
     if(ball.getPosition().y >= pong.getSize().y || ball.getPosition().y <= 0)   // Odbicia od górnej i dolnej ściany
         {
             ballVelocity.y = -ballVelocity.y;
         }
+    else if(ball.getGlobalBounds().findIntersection(block.getGlobalBounds()) )
+    {
+        ballVelocity.x = -ballVelocity.x;
+    }
         
 }
 
@@ -222,7 +230,8 @@ void running(unsigned short choice)
         sf::Vector2f ballPosition = {float(width/2)+30.0f, float(height/2)};   
         sf::Vector2f ballVelocity = {float((rand()%3+1)+5), float(rand()%3+1)};
         unsigned int points = 0;
-     
+        unsigned int randomizeBlockDisplay;
+        sf::RectangleShape block;
     
         sf::RenderWindow pong(sf::VideoMode({width, height}), "Pong");
         pong.setFramerateLimit(45);
@@ -246,19 +255,25 @@ void running(unsigned short choice)
         sf::RectangleShape paddle1 = addPaddle(player1position);
         sf::RectangleShape paddle2 = addPaddle(player2position);
         sf::CircleShape ball = addBall(ballPosition);
+        
+        
     
         while(pong.isOpen())
         {
+           
+                block = addBlock();
+            
             ball.move(ballVelocity);
             std::stringstream sStream;
             sStream << "SCORE " << points;
             text.setString(sStream.str());
+            randomizeBlockDisplay = rand()%1000;
     ///////////////////////////////////////////////////////////////TEST//////////////////////
             //ballControl(ball, pong, ballVelocity);
     ///////////////////////////////////////////////////////////////POLL EVENTS////////////////////////////
             pollEvents(pong);
     /////////////////////////////////////////////////////////////KOLIZJE//////////////////////
-            colision(ball, paddle1, paddle2, ballVelocity, pong, points);
+            colision(ball, paddle1, paddle2, ballVelocity, pong, points, block);
     
     ///////////////////////////////////////////////////////////STEROWANIE/////////////////////
             paddleControls(paddle1, paddle2);
@@ -277,17 +292,31 @@ void running(unsigned short choice)
             pong.draw(paddle2);
             pong.draw(ball);
             pong.draw(text);
-    
+            if(randomizeBlockDisplay > 800 )
+            {
+                pong.draw(block);
+            }
+           
             std::cout << "paletka2> " << paddle2.getPosition().x << "x" << paddle2.getPosition().y 
             <<"\t\tball: " << ball.getPosition().x << "x" << ball.getPosition().y << std::endl;
     
             pong.display();
         }
-    
+       
 }
 
 void printConfig()
 {
     std::cout << " \n\n\t\t UP ARROW-> player1 up\n\t\t DOWN ARROW => player1 down\n\n\t\t W -> player2 up\n\t\tS -> dlayer2 down\n\n";
     system("pause");
+}
+
+sf::RectangleShape addBlock()
+{
+
+    sf::RectangleShape block({20.0f, 20.0f});
+    block.setOrigin(block.getGeometricCenter());
+    block.setPosition({float(((rand()%300)+200)), float(rand()%450) });
+
+    return block;
 }
